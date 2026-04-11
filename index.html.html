@@ -1,0 +1,1760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="StudyLab"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#1A6B4A"/>
+<link rel="manifest" href="#" id="pwa-manifest"/>
+<title>StudyLab — AI Lab Reports & Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#0D0D0D;--ink2:#3A3A3A;--ink3:#7A7A7A;
+  --paper:#FAFAF7;--paper2:#F2F1EC;--paper3:#E8E6DE;
+  --green:#1A6B4A;--green-m:#2D8B62;--green-l:#E6F4EE;
+  --amber:#8B5E00;--amber-l:#FDF3DC;
+  --red:#8B1A1A;--red-l:#FDEAEA;
+  --blue:#1A4A8B;--blue-l:#EEF4FF;
+  --purple:#4A1A8B;--purple-l:#F0EEFF;
+  --scholar:#6B3A1A;--scholar-l:#FFF0E6;--scholar-m:#C46A20;
+  --border:rgba(13,13,13,0.1);--border2:rgba(13,13,13,0.18);
+  --shadow:0 1px 4px rgba(13,13,13,0.06),0 4px 16px rgba(13,13,13,0.06);
+  --shadow-lg:0 8px 40px rgba(13,13,13,0.13);
+  --r:10px;--rsm:6px;--rlg:16px;
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+  --safe-top:env(safe-area-inset-top,0px);
+}
+body{font-family:'Syne',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;overflow-x:hidden;}
+.view{display:none;} .view.active{display:block;}
+
+/* ── BUTTONS ── */
+.btn-primary{padding:9px 20px;border:none;border-radius:var(--rsm);font-family:'Syne',sans-serif;font-weight:600;font-size:14px;color:#fff;background:var(--ink);transition:opacity .15s;cursor:pointer;}
+.btn-primary:hover{opacity:.82;}
+.btn-ghost{padding:9px 18px;border:1.5px solid var(--border2);border-radius:var(--rsm);font-family:'Syne',sans-serif;font-weight:500;font-size:14px;color:var(--ink);background:transparent;transition:background .15s;cursor:pointer;}
+.btn-ghost:hover{background:var(--paper2);}
+.btn-green{padding:11px 24px;border:none;border-radius:var(--rsm);font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:#fff;background:var(--green);transition:opacity .15s;cursor:pointer;}
+.btn-green:hover{opacity:.87;}
+
+/* ══════ UPDATE BANNER ══════ */
+#update-banner{display:none;background:var(--ink);color:#fff;padding:10px 1.5rem;display:flex;align-items:center;gap:12px;font-size:13px;z-index:999;}
+#update-banner.show{display:flex;}
+#update-banner .ub-txt{flex:1;}
+#update-banner .ub-txt strong{display:block;font-size:14px;}
+#update-banner .ub-txt span{color:rgba(255,255,255,.6);font-size:12px;}
+#update-banner .ub-install{padding:6px 14px;background:var(--green);color:#fff;border:none;border-radius:var(--rsm);font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
+#update-banner .ub-dismiss{background:none;border:none;color:rgba(255,255,255,.5);font-size:18px;cursor:pointer;line-height:1;}
+
+/* ══════ LANDING ══════ */
+.l-nav{position:fixed;top:0;left:0;right:0;z-index:200;height:62px;display:flex;align-items:center;padding:0 2rem;background:rgba(250,250,247,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.l-logo{font-family:'Instrument Serif',serif;font-size:22px;letter-spacing:-.5px;}
+.l-logo span{color:var(--green);}
+.l-links{display:flex;gap:1.75rem;margin-left:2rem;}
+.l-links a{font-size:14px;font-weight:500;color:var(--ink2);transition:color .15s;text-decoration:none;}
+.l-links a:hover{color:var(--ink);}
+.l-nav-r{margin-left:auto;display:flex;gap:10px;align-items:center;}
+.hamburger{display:none;background:none;border:none;font-size:22px;color:var(--ink);cursor:pointer;}
+
+.hero{padding:130px 2rem 90px;max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--green-l);color:var(--green);font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;letter-spacing:.7px;text-transform:uppercase;margin-bottom:1.5rem;}
+.hero-pulse{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.hero-h1{font-family:'Instrument Serif',serif;font-size:52px;line-height:1.08;letter-spacing:-1px;margin-bottom:1.25rem;}
+.hero-h1 em{font-style:italic;color:var(--green);}
+.hero-sub{font-size:17px;line-height:1.65;color:var(--ink2);margin-bottom:2rem;}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+.hero-note{font-size:12px;color:var(--ink3);margin-top:10px;}
+.hero-note b{color:var(--green);}
+.hero-mock{background:var(--paper);border:1px solid var(--border2);border-radius:var(--rlg);box-shadow:var(--shadow-lg);overflow:hidden;}
+.mock-bar{background:var(--paper2);border-bottom:1px solid var(--border);padding:11px 14px;display:flex;align-items:center;gap:7px;}
+.dot{width:10px;height:10px;border-radius:50%;}
+.dr{background:#FF6058;}.dy{background:#FFBD2E;}.dg{background:#28CA41;}
+.mock-title{font-size:12px;font-weight:600;color:var(--ink2);margin-left:6px;}
+.mock-body{padding:1.1rem;}
+.mock-lbl{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);margin-bottom:5px;}
+.mock-field{background:var(--paper2);border:1px solid var(--border);border-radius:var(--rsm);padding:7px 10px;font-size:12px;color:var(--ink);margin-bottom:9px;}
+.mock-tbl{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:10px;font-family:'JetBrains Mono',monospace;}
+.mock-tbl th{background:var(--paper3);padding:4px 7px;text-align:center;font-size:9px;font-weight:700;color:var(--ink3);}
+.mock-tbl td{padding:3px 7px;text-align:center;border-bottom:1px solid var(--border);}
+.mock-tbl td.g{color:var(--green);font-weight:500;}
+.mock-btn{width:100%;padding:9px;background:var(--green);color:#fff;border:none;border-radius:var(--rsm);font-size:12px;font-weight:700;font-family:'Syne',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;}
+.mock-ai{background:var(--green-l);border-radius:var(--rsm);padding:9px 11px;margin-top:9px;font-size:11px;line-height:1.6;color:var(--green);border-left:3px solid var(--green);}
+
+.social{background:var(--paper2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.25rem 2rem;display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;}
+.stat-n{font-family:'Instrument Serif',serif;font-size:28px;text-align:center;}
+.stat-l{font-size:12px;color:var(--ink3);text-align:center;}
+
+.section{max-width:1100px;margin:0 auto;padding:5rem 2rem;}
+.sec-tag{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--green);margin-bottom:.875rem;}
+.sec-h{font-family:'Instrument Serif',serif;font-size:38px;line-height:1.2;letter-spacing:-.5px;margin-bottom:.75rem;}
+.sec-sub{font-size:16px;color:var(--ink2);line-height:1.65;max-width:520px;}
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2.5rem;}
+.step{background:var(--paper);border:1px solid var(--border);border-radius:var(--rlg);padding:1.75rem;transition:box-shadow .2s,transform .2s;}
+.step:hover{box-shadow:var(--shadow-lg);transform:translateY(-3px);}
+.step-n{font-family:'Instrument Serif',serif;font-size:34px;color:var(--paper3);}
+.step-icon{font-size:22px;margin:.5rem 0 .75rem;}
+.step-title{font-size:16px;font-weight:600;margin-bottom:.5rem;}
+.step-desc{font-size:14px;color:var(--ink2);line-height:1.65;}
+
+.feats-bg{background:var(--paper2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:5rem 0;}
+.feats-wrap{max-width:1100px;margin:0 auto;padding:0 2rem;}
+.feats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem;margin-top:2.5rem;}
+.feat{background:var(--paper);border:1px solid var(--border);border-radius:var(--rlg);padding:1.5rem;display:flex;gap:1rem;}
+.feat-ico{width:44px;height:44px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.feat-ico.g{background:var(--green-l);}
+.feat-ico.a{background:var(--amber-l);}
+.feat-ico.r{background:var(--red-l);}
+.feat-ico.b{background:var(--blue-l);}
+.feat-ico.s{background:var(--scholar-l);}
+.feat-title{font-size:15px;font-weight:600;margin-bottom:4px;}
+.feat-desc{font-size:13.5px;color:var(--ink2);line-height:1.6;}
+.feat-lock{display:inline-block;font-size:10px;font-weight:700;background:var(--scholar-l);color:var(--scholar-m);padding:2px 8px;border-radius:10px;margin-top:5px;letter-spacing:.4px;}
+
+/* ── 4-TIER PRICING ── */
+.price-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:2.5rem;}
+.price-card{background:var(--paper);border:1px solid var(--border);border-radius:var(--rlg);padding:1.5rem;transition:box-shadow .2s;position:relative;}
+.price-card:hover{box-shadow:var(--shadow-lg);}
+.price-card.feat-card{background:var(--ink);border-color:var(--ink);}
+.price-card.feat-card *{color:#fff!important;}
+.price-card.feat-card .pf-line{border-color:rgba(255,255,255,.15)!important;}
+.price-card.feat-card .p-cta{background:#fff;color:var(--ink)!important;}
+.price-card.feat-card .p-badge{background:var(--green);color:#fff!important;}
+.price-card.scholar-card{background:linear-gradient(135deg,#FFF8F0 0%,#FFF0E0 100%);border:1.5px solid #E8A060;}
+.price-card.scholar-card .p-badge{background:var(--scholar-l);color:var(--scholar-m);}
+.p-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;background:var(--green-l);color:var(--green);padding:3px 10px;border-radius:20px;margin-bottom:.875rem;}
+.p-name{font-size:17px;font-weight:700;margin-bottom:.2rem;}
+.p-desc{font-size:12px;color:var(--ink3);margin-bottom:1rem;}
+.p-amount{font-family:'Instrument Serif',serif;font-size:36px;letter-spacing:-1px;}
+.p-amount sup{font-size:18px;vertical-align:super;}
+.p-per{font-size:12px;color:var(--ink3);margin-left:3px;}
+.pf-line{border-top:1px solid var(--border);margin:1rem 0;}
+.p-feats{list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:1.25rem;}
+.p-feats li{font-size:13px;color:var(--ink2);display:flex;align-items:flex-start;gap:7px;line-height:1.4;}
+.p-feats li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;}
+.p-feats li.off{color:var(--ink3);}
+.p-feats li.off::before{content:'–';color:var(--ink3);}
+.p-feats li.cam{color:var(--scholar);}
+.p-feats li.cam::before{content:'📷';font-size:11px;}
+.p-cta{width:100%;padding:11px;border:1.5px solid var(--border2);border-radius:var(--rsm);font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--ink);background:transparent;transition:all .15s;cursor:pointer;}
+.p-cta:hover{background:var(--paper2);}
+.p-cta.scholar-cta{background:var(--scholar-m);color:#fff;border-color:var(--scholar-m);}
+.p-cta.scholar-cta:hover{opacity:.87;}
+
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:2.5rem;}
+.testi{background:var(--paper);border:1px solid var(--border);border-radius:var(--rlg);padding:1.5rem;}
+.t-stars{font-size:13px;letter-spacing:1px;margin-bottom:.75rem;}
+.t-text{font-size:14px;line-height:1.7;color:var(--ink2);font-style:italic;margin-bottom:1rem;}
+.t-auth{display:flex;align-items:center;gap:10px;}
+.t-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;}
+.t-name{font-size:13px;font-weight:600;}
+.t-role{font-size:11px;color:var(--ink3);}
+
+.cta-banner{background:var(--ink);margin:0 2rem 5rem;border-radius:var(--rlg);padding:3.5rem 3rem;display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap;}
+.cta-h{font-family:'Instrument Serif',serif;font-size:34px;color:#fff;letter-spacing:-.5px;}
+.cta-sub{font-size:14px;color:rgba(255,255,255,.55);margin-top:.5rem;}
+footer{border-top:1px solid var(--border);padding:2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.ft-logo{font-family:'Instrument Serif',serif;font-size:18px;}
+.ft-logo span{color:var(--green);}
+.ft-links{display:flex;gap:1.5rem;}
+.ft-links a{font-size:13px;color:var(--ink3);text-decoration:none;transition:color .15s;}
+.ft-links a:hover{color:var(--ink);}
+
+/* mobile menu */
+.mob-menu{display:none;position:fixed;inset:0;z-index:300;background:var(--paper);flex-direction:column;padding:5rem 2rem 2rem;}
+.mob-menu.open{display:flex;}
+.mob-menu-close{position:absolute;top:18px;right:18px;font-size:26px;background:none;border:none;color:var(--ink);cursor:pointer;}
+.mob-menu a{font-size:22px;font-weight:600;color:var(--ink);padding:.75rem 0;border-bottom:1px solid var(--border);text-decoration:none;}
+
+/* ══════ DASHBOARD ══════ */
+#view-dashboard{background:var(--paper);}
+.d-nav{height:58px;background:var(--paper);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 1.5rem;gap:1rem;position:sticky;top:0;z-index:100;}
+.d-logo{font-family:'Instrument Serif',serif;font-size:20px;cursor:pointer;}
+.d-logo span{color:var(--green);}
+.d-nav-r{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.pro-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;}
+.badge-pro{background:var(--ink);color:var(--paper);}
+.badge-scholar{background:var(--scholar-m);color:#fff;}
+.badge-group{background:var(--green);color:#fff;}
+.upgrade-btn{padding:6px 14px;background:var(--green);color:#fff;border:none;border-radius:var(--rsm);font-size:12px;font-weight:700;font-family:'Syne',sans-serif;cursor:pointer;transition:opacity .15s;}
+.upgrade-btn:hover{opacity:.85;}
+.d-av{width:30px;height:30px;border-radius:50%;background:var(--green-l);color:var(--green);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+
+.dash-layout{display:flex;min-height:calc(100vh - 58px);}
+.dash-sidebar{width:220px;min-width:220px;background:var(--paper);border-right:1px solid var(--border);padding:1.25rem .75rem;display:flex;flex-direction:column;}
+.ds-lbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);padding:.875rem .5rem .4rem;}
+.ds-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--rsm);font-size:13px;color:var(--ink2);cursor:pointer;transition:all .12s;margin-bottom:1px;}
+.ds-item:hover{background:var(--paper2);color:var(--ink);}
+.ds-item.active{background:var(--green-l);color:var(--green);font-weight:500;}
+.ds-item-ico{font-size:14px;width:18px;text-align:center;}
+.ds-sep{border-top:1px solid var(--border);margin:.75rem 0;}
+.dash-main{flex:1;padding:2rem;overflow-y:auto;}
+.dash-h{font-family:'Instrument Serif',serif;font-size:26px;letter-spacing:-.5px;margin-bottom:4px;}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+.metric{background:var(--paper);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;}
+.metric-n{font-family:'Instrument Serif',serif;font-size:32px;line-height:1;}
+.metric-l{font-size:12px;color:var(--ink3);margin-top:4px;}
+.metric-ch{font-size:11px;font-weight:700;margin-top:6px;}
+.ch-up{color:var(--green);}.ch-dn{color:var(--red);}
+.dash-grid{display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;margin-bottom:2rem;}
+.dash-card{background:var(--paper);border:1px solid var(--border);border-radius:var(--rlg);overflow:hidden;}
+.dch{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.dch-title{font-size:14px;font-weight:600;}
+.dch-action{font-size:12px;color:var(--green);cursor:pointer;font-weight:500;}
+.dcb{padding:1.25rem;}
+.doc-list{display:flex;flex-direction:column;}
+.doc-row{display:flex;align-items:center;gap:12px;padding:10px 1.25rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
+.doc-row:hover{background:var(--paper2);}
+.doc-row:last-child{border-bottom:none;}
+.doc-ico{width:36px;height:36px;border-radius:var(--rsm);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.doc-ico.g{background:var(--green-l);}
+.doc-ico.a{background:var(--amber-l);}
+.doc-ico.b{background:var(--blue-l);}
+.doc-info{flex:1;min-width:0;}
+.doc-name{font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.doc-meta{font-size:11px;color:var(--ink3);display:flex;gap:8px;margin-top:2px;}
+.doc-status{font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;}
+.ds-done{background:var(--green-l);color:var(--green);}
+.ds-draft{background:var(--amber-l);color:var(--amber);}
+.streak-box{display:flex;align-items:center;gap:1rem;padding:1.1rem;background:var(--green-l);border-radius:var(--r);margin-bottom:.875rem;}
+.streak-n{font-family:'Instrument Serif',serif;font-size:38px;color:var(--green);line-height:1;}
+.streak-txt strong{font-size:14px;font-weight:700;color:var(--green);}
+.streak-txt p{font-size:12px;color:var(--green-m);}
+.act-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.act-cell{width:100%;aspect-ratio:1;border-radius:3px;background:var(--paper3);}
+.al1{background:#B5DBCA;}.al2{background:#6DB89A;}.al3{background:#2D8B62;}.al4{background:var(--green);}
+.usage-item{margin-bottom:.875rem;}
+.usage-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;}
+.usage-bar{height:6px;background:var(--paper3);border-radius:3px;overflow:hidden;}
+.usage-fill{height:100%;border-radius:3px;background:var(--green);transition:width .5s;}
+.qa-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;}
+.qa-btn{border:1.5px dashed var(--border2);border-radius:var(--r);padding:1rem;text-align:center;cursor:pointer;transition:all .15s;background:transparent;}
+.qa-btn:hover{border-color:var(--green);background:var(--green-l);}
+.qa-icon{font-size:22px;margin-bottom:6px;}
+.qa-label{font-size:13px;font-weight:500;color:var(--ink2);}
+.plan-banner{background:var(--ink);border-radius:var(--r);padding:1.25rem;color:#fff;margin-top:1rem;}
+.plan-banner h4{font-size:15px;font-weight:700;margin-bottom:4px;}
+.plan-banner p{font-size:12px;color:rgba(255,255,255,.6);margin-bottom:12px;}
+.plan-banner button{width:100%;padding:9px;background:var(--green);color:#fff;border:none;border-radius:var(--rsm);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;}
+
+/* Recommendations panel */
+.reco-badge{display:inline-flex;align-items:center;gap:5px;background:var(--amber-l);color:var(--amber);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:1rem;}
+.reco-card{background:var(--paper);border:1px solid var(--border);border-radius:var(--rlg);margin-bottom:1rem;overflow:hidden;}
+.reco-head{padding:.875rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.reco-title{font-size:14px;font-weight:600;}
+.reco-meta{font-size:11px;color:var(--ink3);}
+.reco-body{padding:1.25rem;}
+.reco-body p{font-size:13.5px;color:var(--ink2);line-height:1.7;margin-bottom:.875rem;}
+.reco-actions{display:flex;gap:8px;}
+.reco-approve{padding:7px 16px;background:var(--green);color:#fff;border:none;border-radius:var(--rsm);font-family:'Syne',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .15s;}
+.reco-approve:hover{opacity:.85;}
+.reco-dismiss{padding:7px 16px;border:1px solid var(--border2);background:transparent;border-radius:var(--rsm);font-family:'Syne',sans-serif;font-size:13px;color:var(--ink2);cursor:pointer;transition:background .12s;}
+.reco-dismiss:hover{background:var(--paper2);}
+.reco-status{font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;}
+.rs-pending{background:var(--amber-l);color:var(--amber);}
+.rs-approved{background:var(--green-l);color:var(--green);}
+.rs-dismissed{background:var(--paper3);color:var(--ink3);}
+
+/* ══════ APP ══════ */
+#view-app{background:var(--paper);}
+.app-nav{height:58px;background:var(--paper);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 1.5rem;gap:1rem;position:sticky;top:0;z-index:100;}
+.a-logo{font-family:'Instrument Serif',serif;font-size:20px;cursor:pointer;}
+.a-logo span{color:var(--green);}
+.app-tabs{display:flex;}
+.app-tab{padding:0 1rem;height:58px;display:flex;align-items:center;font-size:13px;font-weight:500;color:var(--ink3);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;}
+.app-tab:hover{color:var(--ink);}
+.app-tab.active{color:var(--ink);border-bottom-color:var(--ink);}
+.app-nav-r{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.app-body{display:flex;height:calc(100vh - 58px);overflow:hidden;}
+.app-sidebar{width:230px;min-width:230px;background:var(--paper);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+.sb-head{padding:.75rem;}
+.sb-new{width:100%;padding:8px;border:1.5px dashed var(--border2);border-radius:var(--rsm);background:transparent;font-family:'Syne',sans-serif;font-size:13px;font-weight:500;color:var(--ink2);transition:all .15s;cursor:pointer;}
+.sb-new:hover{background:var(--paper2);border-color:var(--ink);}
+.sb-sec{padding:0 .75rem;}
+.sb-lbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);padding:.75rem .5rem .4rem;}
+.sb-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--rsm);font-size:13px;color:var(--ink2);cursor:pointer;transition:all .12s;margin-bottom:1px;}
+.sb-item:hover{background:var(--paper2);color:var(--ink);}
+.sb-item.active{background:var(--green-l);color:var(--green);font-weight:500;}
+.sb-ico{font-size:14px;width:17px;text-align:center;}
+.sb-cnt{margin-left:auto;font-size:11px;color:var(--ink3);background:var(--paper3);padding:1px 6px;border-radius:10px;}
+.sb-collab{margin-top:auto;border-top:1px solid var(--border);padding:.875rem;}
+.sb-collab-l{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--ink3);margin-bottom:7px;}
+.sb-avs{display:flex;margin-bottom:5px;}
+.sb-av{width:26px;height:26px;border-radius:50%;border:2px solid var(--paper);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;margin-right:-5px;}
+.sb-share{width:100%;padding:7px;border:1px solid var(--border2);background:transparent;border-radius:var(--rsm);font-size:12px;font-family:'Syne',sans-serif;color:var(--ink);transition:background .12s;cursor:pointer;}
+.sb-share:hover{background:var(--paper2);}
+
+.app-main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.app-panel{display:none;flex:1;overflow:auto;}
+.app-panel.active{display:flex;flex-direction:column;}
+
+/* practical */
+.prac-layout{display:grid;grid-template-columns:1fr 350px;flex:1;overflow:hidden;}
+.prac-form{padding:1.5rem;overflow-y:auto;border-right:1px solid var(--border);}
+.prac-prev{display:flex;flex-direction:column;background:var(--paper2);overflow:hidden;}
+.f-lbl{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:5px;}
+.f-block{margin-bottom:1.1rem;}
+input[type=text],input[type=number],textarea,select{width:100%;padding:8px 11px;border:1px solid var(--border2);border-radius:var(--rsm);font-family:'Syne',sans-serif;font-size:13.5px;color:var(--ink);background:var(--paper);outline:none;transition:border .12s;resize:vertical;}
+input:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(26,107,74,.08);}
+textarea{min-height:68px;}
+.rtbl{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:7px;}
+.rtbl th{background:var(--paper3);padding:5px 7px;font-size:9px;font-weight:700;color:var(--ink3);text-align:center;letter-spacing:.5px;text-transform:uppercase;}
+.rtbl td{padding:3px 3px;border-bottom:1px solid var(--border);}
+.rtbl td input{padding:4px 7px;font-size:12px;font-family:'JetBrains Mono',monospace;}
+.rtbl td input.auto{background:var(--green-l);color:var(--green);font-weight:500;}
+.add-row{font-size:12px;color:var(--green);background:none;border:1px dashed var(--green);border-radius:var(--rsm);padding:4px 12px;font-family:'Syne',sans-serif;transition:background .12s;cursor:pointer;}
+.add-row:hover{background:var(--green-l);}
+.calc-box{background:var(--paper2);border:1px solid var(--border);border-radius:var(--rsm);padding:.875rem;margin-bottom:1.1rem;}
+.calc-ttl{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--ink3);margin-bottom:9px;}
+.calc-row{display:flex;align-items:center;gap:9px;margin-bottom:7px;}
+.calc-row label{font-size:13px;color:var(--ink2);min-width:130px;}
+.calc-row input{width:85px!important;}
+.calc-res{background:var(--green-l);color:var(--green);padding:8px 11px;border-radius:var(--rsm);font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:500;margin-top:7px;}
+.calc-do{padding:6px 14px;background:var(--green);color:#fff;border:none;border-radius:var(--rsm);font-size:12.5px;font-family:'Syne',sans-serif;font-weight:600;cursor:pointer;transition:opacity .12s;}
+.calc-do:hover{opacity:.85;}
+.fmt-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px;}
+.fmt-chip{padding:4px 12px;border:1px solid var(--border2);border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;transition:all .12s;color:var(--ink2);}
+.fmt-chip.sel{background:var(--ink);color:#fff;border-color:var(--ink);}
+.upload-z{border:1.5px dashed var(--border2);border-radius:var(--r);padding:1.1rem;text-align:center;cursor:pointer;transition:all .15s;}
+.upload-z:hover{border-color:var(--green);background:var(--green-l);}
+.upload-z p{font-size:12.5px;color:var(--ink3);margin-top:5px;}
+.upload-z strong{color:var(--ink);}
+.gen-btn{width:100%;padding:12px;background:var(--green);color:#fff;border:none;border-radius:var(--r);font-family:'Syne',sans-serif;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .15s;margin-top:.5rem;cursor:pointer;}
+.gen-btn:hover{opacity:.87;}
+.gen-btn:disabled{opacity:.5;cursor:not-allowed;}
+.prev-head{padding:.875rem 1.1rem;border-bottom:1px solid var(--border);background:var(--paper);display:flex;align-items:center;justify-content:space-between;}
+.prev-title{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--ink3);}
+.prev-acts{display:flex;gap:7px;}
+.prev-btn{padding:5px 11px;font-size:12px;border:1px solid var(--border2);background:var(--paper);border-radius:var(--rsm);font-family:'Syne',sans-serif;color:var(--ink);transition:background .12s;cursor:pointer;}
+.prev-btn:hover{background:var(--paper2);}
+.prev-body{flex:1;overflow-y:auto;padding:1.1rem;}
+.prev-doc{background:var(--paper);border-radius:var(--r);padding:1.5rem;box-shadow:var(--shadow);font-size:13px;line-height:1.75;}
+.prev-doc h2{font-family:'Instrument Serif',serif;font-size:16px;font-weight:700;border-bottom:1.5px solid var(--ink);padding-bottom:3px;margin:18px 0 9px;color:var(--ink);}
+.prev-doc h2:first-child{margin-top:0;}
+.prev-doc p{margin-bottom:8px;color:var(--ink2);}
+.prev-doc table{width:100%;border-collapse:collapse;margin:9px 0;font-family:'JetBrains Mono',monospace;font-size:11px;}
+.prev-doc th{background:var(--paper2);padding:5px 8px;font-weight:700;border:1px solid var(--border2);text-align:center;}
+.prev-doc td{padding:4px 8px;border:1px solid var(--border);text-align:center;}
+.prev-empty{text-align:center;padding:3rem 1.5rem;color:var(--ink3);}
+.loading{display:none;justify-content:center;padding:2.5rem;gap:6px;align-items:center;}
+.loading span{width:7px;height:7px;border-radius:50%;background:var(--green);animation:ld 1.2s infinite;}
+.loading span:nth-child(2){animation-delay:.2s;}.loading span:nth-child(3){animation-delay:.4s;}
+@keyframes ld{0%,80%,100%{transform:translateY(0);opacity:.4;}40%{transform:translateY(-8px);opacity:1;}}
+
+/* PHOTO CAPTURE PANEL */
+.photo-layout{padding:1.5rem;overflow-y:auto;flex:1;}
+.photo-header{margin-bottom:1.5rem;}
+.photo-header h2{font-family:'Instrument Serif',serif;font-size:22px;letter-spacing:-.5px;margin-bottom:3px;}
+.photo-header p{font-size:13px;color:var(--ink3);}
+.scholar-banner{background:linear-gradient(135deg,#FFF8F0,#FFF0E0);border:1.5px solid #E8A060;border-radius:var(--rlg);padding:1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;}
+.scholar-banner-icon{font-size:32px;}
+.scholar-banner h3{font-size:16px;font-weight:700;color:var(--scholar);margin-bottom:4px;}
+.scholar-banner p{font-size:13px;color:var(--scholar-m);line-height:1.5;}
+.scholar-banner .upgrade-cta{margin-top:.75rem;padding:8px 18px;background:var(--scholar-m);color:#fff;border:none;border-radius:var(--rsm);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s;display:inline-block;}
+.scholar-banner .upgrade-cta:hover{opacity:.87;}
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem;}
+.photo-zone{border:2px dashed var(--border2);border-radius:var(--rlg);padding:2rem 1rem;text-align:center;cursor:pointer;transition:all .2s;background:var(--paper);}
+.photo-zone:hover{border-color:var(--scholar-m);background:var(--scholar-l);}
+.photo-zone-icon{font-size:32px;margin-bottom:8px;}
+.photo-zone-label{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px;}
+.photo-zone-sub{font-size:12px;color:var(--ink3);}
+.photo-preview{border-radius:var(--rlg);overflow:hidden;border:1px solid var(--border);background:var(--paper);}
+.photo-preview img{width:100%;height:160px;object-fit:cover;display:block;}
+.photo-preview-info{padding:.875rem;}
+.photo-preview-name{font-size:13px;font-weight:500;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.photo-analyze-btn{width:100%;padding:8px;background:var(--scholar-m);color:#fff;border:none;border-radius:var(--rsm);font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:opacity .15s;}
+.photo-analyze-btn:hover{opacity:.87;}
+.analysis-result{background:var(--paper);border:1px solid var(--border);border-radius:var(--rlg);padding:1.5rem;margin-top:1.5rem;}
+.analysis-result-head{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.ar-icon{width:40px;height:40px;background:var(--scholar-l);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:20px;}
+.ar-title{font-size:16px;font-weight:600;}
+.ar-sub{font-size:12px;color:var(--ink3);}
+.ar-body{font-size:13.5px;line-height:1.75;color:var(--ink2);}
+.ar-body h3{font-family:'Instrument Serif',serif;font-size:15px;font-weight:700;color:var(--ink);margin:12px 0 6px;}
+.ar-actions{display:flex;gap:8px;margin-top:1rem;flex-wrap:wrap;}
+.ar-action-btn{padding:8px 16px;background:var(--green);color:#fff;border:none;border-radius:var(--rsm);font-family:'Syne',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .15s;}
+.ar-action-btn:hover{opacity:.85;}
+.ar-action-ghost{padding:8px 16px;border:1px solid var(--border2);background:transparent;border-radius:var(--rsm);font-family:'Syne',sans-serif;font-size:13px;color:var(--ink);cursor:pointer;transition:background .12s;}
+.ar-action-ghost:hover{background:var(--paper2);}
+.locked-overlay{position:relative;}
+.locked-overlay::after{content:'🔒 Scholar & Group Plan only';position:absolute;inset:0;background:rgba(250,250,247,.9);border-radius:var(--rlg);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--scholar);cursor:pointer;}
+
+/* notes */
+.notes-layout{display:grid;grid-template-columns:240px 1fr;flex:1;overflow:hidden;}
+.notes-list{border-right:1px solid var(--border);display:flex;flex-direction:column;background:var(--paper);overflow:hidden;}
+.notes-search{padding:9px;border-bottom:1px solid var(--border);}
+.notes-search input{padding:6px 10px;font-size:13px;}
+.notes-items{flex:1;overflow-y:auto;}
+.note-row{padding:10px 13px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
+.note-row:hover{background:var(--paper2);}
+.note-row.active{background:var(--green-l);}
+.note-row-title{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px;}
+.note-row.active .note-row-title{color:var(--green);}
+.note-row-meta{font-size:11px;color:var(--ink3);display:flex;gap:7px;align-items:center;}
+.note-tag{font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;}
+.t-bio{background:var(--green-l);color:var(--green);}
+.t-chem{background:var(--blue-l);color:var(--blue);}
+.t-phys{background:var(--red-l);color:var(--red);}
+.t-math{background:var(--amber-l);color:var(--amber);}
+.notes-editor{display:flex;flex-direction:column;overflow:hidden;}
+.notes-tb{padding:8px 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;background:var(--paper);flex-wrap:wrap;}
+.tb-btn{padding:5px 9px;border:1px solid var(--border);background:transparent;border-radius:var(--rsm);font-size:12px;font-family:'Syne',sans-serif;color:var(--ink2);transition:all .12s;cursor:pointer;}
+.tb-btn:hover{background:var(--paper2);color:var(--ink);}
+.tb-sep{width:1px;height:17px;background:var(--border2);}
+.ai-sum-btn{margin-left:auto;padding:6px 13px;background:var(--ink);color:#fff;border:none;border-radius:var(--rsm);font-size:12px;font-weight:700;font-family:'Syne',sans-serif;display:flex;align-items:center;gap:5px;transition:opacity .15s;cursor:pointer;}
+.ai-sum-btn:hover{opacity:.82;}
+.editor-body{flex:1;display:flex;overflow:hidden;}
+.editor-main{flex:1;padding:1.25rem 1.75rem;overflow-y:auto;display:flex;flex-direction:column;}
+.ed-title{font-family:'Instrument Serif',serif;font-size:26px;border:none;outline:none;color:var(--ink);margin-bottom:.875rem;background:transparent;width:100%;letter-spacing:-.5px;}
+.ed-content{flex:1;border:none;outline:none;font-family:'Syne',sans-serif;font-size:14px;line-height:1.8;color:var(--ink2);background:transparent;resize:none;min-height:260px;}
+.ai-side{width:270px;border-left:1px solid var(--border);display:flex;flex-direction:column;background:var(--paper);overflow:hidden;}
+.ai-side-head{padding:11px 13px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;}
+.ai-side-title{font-size:12px;font-weight:700;}
+.ai-badge{background:var(--ink);color:var(--paper);font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;letter-spacing:.4px;}
+.ai-side-body{flex:1;padding:.875rem;overflow-y:auto;font-size:13px;line-height:1.7;}
+.ai-kp{display:flex;gap:7px;margin-bottom:7px;padding:7px 9px;background:var(--paper2);border-radius:var(--rsm);}
+.ai-kp-dot{width:5px;height:5px;border-radius:50%;background:var(--green);margin-top:7px;flex-shrink:0;}
+.ai-foot{padding:.75rem;}
+.ai-foot-btn{width:100%;padding:7px;border:1px solid var(--border2);background:transparent;border-radius:var(--rsm);font-size:12px;font-family:'Syne',sans-serif;color:var(--ink);margin-bottom:6px;transition:background .12s;cursor:pointer;}
+.ai-foot-btn:hover{background:var(--paper2);}
+
+/* flashcards */
+.fc-wrap{padding:1.5rem;overflow-y:auto;flex:1;}
+.fc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:.75rem;}
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:13px;}
+.fc-card{background:var(--paper);border:1px solid var(--border);border-radius:var(--rlg);padding:1.1rem;cursor:pointer;transition:all .2s;min-height:125px;position:relative;}
+.fc-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px);}
+.fc-tag{font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin-bottom:7px;display:block;}
+.fc-q{font-size:13.5px;font-weight:500;color:var(--ink);line-height:1.5;}
+.fc-a{font-size:13px;color:var(--ink2);margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:none;line-height:1.6;}
+.fc-card.revealed .fc-a{display:block;}
+.fc-hint{position:absolute;bottom:9px;right:10px;font-size:10px;color:var(--ink3);}
+.fc-card.revealed .fc-hint{display:none;}
+
+.app-status{padding:5px 1.25rem;border-top:1px solid var(--border);background:var(--paper);display:flex;align-items:center;gap:1.25rem;font-size:11px;color:var(--ink3);flex-wrap:wrap;}
+.s-dot{width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block;margin-right:4px;}
+
+/* mobile bottom nav */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--paper);border-top:1px solid var(--border);z-index:100;padding:0 .5rem;padding-bottom:calc(.5rem + var(--safe-bottom));}
+.bottom-nav-inner{display:flex;justify-content:space-around;}
+.bn-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:.5rem .75rem;cursor:pointer;border-radius:var(--rsm);transition:background .12s;}
+.bn-item.active{background:var(--green-l);}
+.bn-item.active .bn-label{color:var(--green);}
+.bn-ico{font-size:18px;}
+.bn-label{font-size:10px;font-weight:600;color:var(--ink3);}
+
+/* ══════ SUPPORT CHAT ══════ */
+.support-fab{position:fixed;bottom:calc(1.5rem + var(--safe-bottom));right:1.5rem;z-index:400;width:52px;height:52px;border-radius:50%;background:var(--green);color:#fff;border:none;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(26,107,74,.35);cursor:pointer;transition:transform .15s;}
+.support-fab:hover{transform:scale(1.08);}
+.support-fab.has-notif::after{content:'';position:absolute;top:8px;right:8px;width:10px;height:10px;border-radius:50%;background:#FF6058;border:2px solid var(--paper);}
+.support-chat{position:fixed;bottom:calc(5.5rem + var(--safe-bottom));right:1.5rem;z-index:400;width:340px;max-height:500px;background:var(--paper);border:1px solid var(--border);border-radius:var(--rlg);box-shadow:var(--shadow-lg);display:none;flex-direction:column;overflow:hidden;animation:chatIn .2s ease;}
+@keyframes chatIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.support-chat.open{display:flex;}
+.sc-head{padding:.875rem 1rem;background:var(--green);color:#fff;display:flex;align-items:center;gap:8px;}
+.sc-head-title{flex:1;font-size:14px;font-weight:700;}
+.sc-head-sub{font-size:11px;color:rgba(255,255,255,.7);}
+.sc-close{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;line-height:1;}
+.sc-messages{flex:1;overflow-y:auto;padding:.875rem;display:flex;flex-direction:column;gap:.75rem;}
+.sc-msg{max-width:85%;padding:.625rem .875rem;border-radius:var(--rlg);font-size:13px;line-height:1.55;}
+.sc-msg.bot{background:var(--paper2);color:var(--ink);align-self:flex-start;border-bottom-left-radius:4px;}
+.sc-msg.user{background:var(--green);color:#fff;align-self:flex-end;border-bottom-right-radius:4px;}
+.sc-msg.typing{background:var(--paper2);padding:.5rem .875rem;}
+.sc-msg.typing span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--ink3);animation:ld 1.2s infinite;margin:0 2px;}
+.sc-msg.typing span:nth-child(2){animation-delay:.2s;}
+.sc-msg.typing span:nth-child(3){animation-delay:.4s;}
+.sc-input-area{padding:.75rem;border-top:1px solid var(--border);display:flex;gap:7px;}
+.sc-input{flex:1;padding:8px 11px;border:1px solid var(--border2);border-radius:var(--rsm);font-family:'Syne',sans-serif;font-size:13px;outline:none;}
+.sc-input:focus{border-color:var(--green);}
+.sc-send{padding:8px 14px;background:var(--green);color:#fff;border:none;border-radius:var(--rsm);font-family:'Syne',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.sc-payment-notice{background:var(--amber-l);color:var(--amber);font-size:12px;padding:.5rem .875rem;text-align:center;border-top:1px solid rgba(139,94,0,.15);}
+
+/* ══════ MODALS ══════ */
+.overlay{position:fixed;inset:0;background:rgba(13,13,13,.55);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(5px);padding:1rem;}
+.overlay.open{display:flex;}
+.modal{background:var(--paper);border-radius:var(--rlg);padding:2.25rem;max-width:500px;width:100%;box-shadow:var(--shadow-lg);position:relative;animation:mIn .22s ease;max-height:90vh;overflow-y:auto;}
+@keyframes mIn{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.m-close{position:absolute;top:13px;right:15px;font-size:22px;background:none;border:none;color:var(--ink3);line-height:1;cursor:pointer;}
+.m-title{font-family:'Instrument Serif',serif;font-size:26px;letter-spacing:-.5px;margin-bottom:.375rem;}
+.m-sub{font-size:14px;color:var(--ink3);margin-bottom:1.5rem;line-height:1.5;}
+.m-lbl{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:5px;}
+.m-ig{margin-bottom:.875rem;}
+.m-btn{width:100%;padding:12px;background:var(--ink);color:#fff;border:none;border-radius:var(--rsm);font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-top:.5rem;transition:opacity .15s;cursor:pointer;}
+.m-btn:hover{opacity:.82;}
+.m-div{display:flex;align-items:center;gap:9px;margin:.875rem 0;}
+.m-div::before,.m-div::after{content:'';flex:1;height:1px;background:var(--border);}
+.m-div span{font-size:12px;color:var(--ink3);}
+.m-toggle{text-align:center;font-size:13px;color:var(--ink3);margin-top:.75rem;}
+.m-toggle a{color:var(--green);cursor:pointer;font-weight:600;}
+.plan-sel{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem;}
+.plan-opt{border:1.5px solid var(--border2);border-radius:var(--rsm);padding:.75rem;cursor:pointer;transition:all .15s;text-align:center;}
+.plan-opt.sel{border-color:var(--green);background:var(--green-l);}
+.po-name{font-size:14px;font-weight:700;}
+.po-price{font-size:18px;font-weight:700;font-family:'Instrument Serif',serif;color:var(--green);margin:.2rem 0;}
+.po-desc{font-size:11px;color:var(--ink3);}
+
+/* payment */
+.pay-plans{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:1.25rem;}
+.pay-plan{border:2px solid var(--border2);border-radius:var(--rsm);padding:1rem;cursor:pointer;transition:all .15s;text-align:center;}
+.pay-plan.sel{border-color:var(--green);background:var(--green-l);}
+.pay-plan.scholar-plan.sel{border-color:var(--scholar-m);background:var(--scholar-l);}
+.pp-name{font-size:13px;font-weight:700;}
+.pp-price{font-family:'Instrument Serif',serif;font-size:22px;color:var(--green);}
+.scholar-plan .pp-price{color:var(--scholar-m);}
+.pp-per{font-size:10px;color:var(--ink3);}
+.pp-feats{font-size:10px;color:var(--ink3);margin-top:.5rem;line-height:1.6;}
+.pay-summary{background:var(--paper2);border-radius:var(--rsm);padding:1rem;margin-bottom:1.25rem;}
+.psr{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;}
+.psr:last-child{font-weight:700;font-size:14px;margin-bottom:0;padding-top:7px;border-top:1px solid var(--border);}
+.pay-method{margin-bottom:1.25rem;}
+.pm-lbl{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;}
+.pm-opts{display:flex;gap:8px;}
+.pm-opt{flex:1;padding:8px;border:1.5px solid var(--border2);border-radius:var(--rsm);text-align:center;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--ink2);}
+.pm-opt.sel{border-color:var(--green);background:var(--green-l);color:var(--green);}
+.rzp-btn{width:100%;padding:13px;background:var(--green);color:#fff;border:none;border-radius:var(--rsm);font-family:'Syne',sans-serif;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:opacity .15s;}
+.rzp-btn:hover{opacity:.87;}
+.rzp-secure{text-align:center;font-size:11px;color:var(--ink3);margin-top:8px;}
+.pay-success{text-align:center;padding:1rem 0;}
+.pay-success-ico{font-size:52px;margin-bottom:1rem;animation:popIn .4s ease;}
+@keyframes popIn{0%{transform:scale(.5);}70%{transform:scale(1.15);}100%{transform:scale(1);}}
+
+/* ══════ RESPONSIVE ══════ */
+@media(max-width:900px){
+  .price-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:768px){
+  .l-links,.l-nav-r .btn-ghost,.l-nav-r .btn-primary{display:none;}
+  .hamburger{display:block;}
+  .hero{grid-template-columns:1fr;gap:2rem;padding:100px 1.25rem 3rem;}
+  .hero-h1{font-size:36px;}
+  .hero-sub{font-size:15px;}
+  .hero-mock{display:none;}
+  .social{gap:1.5rem;padding:1rem 1.25rem;}
+  .steps-grid,.feats-grid,.price-grid,.testi-grid{grid-template-columns:1fr;}
+  .section{padding:3rem 1.25rem;}
+  .sec-h{font-size:28px;}
+  .cta-banner{margin:0 1.25rem 3rem;padding:2rem 1.25rem;flex-direction:column;text-align:center;}
+  .cta-h{font-size:26px;}
+  footer{flex-direction:column;align-items:flex-start;padding:1.5rem 1.25rem;}
+  .dash-layout{flex-direction:column;}
+  .dash-sidebar{display:none;}
+  .dash-main{padding:1rem;}
+  .metrics{grid-template-columns:repeat(2,1fr);}
+  .dash-grid{grid-template-columns:1fr;}
+  .app-nav{padding:0 1rem;}
+  .app-tabs{display:none;}
+  .app-body{flex-direction:column;height:auto;min-height:calc(100vh - 58px - 60px);}
+  .app-sidebar{display:none;}
+  .prac-layout{grid-template-columns:1fr;height:auto;}
+  .prac-prev{display:none;}
+  .notes-layout{grid-template-columns:1fr;height:auto;}
+  .notes-list{display:none;}
+  .ai-side{display:none;}
+  .app-panel{height:auto;}
+  .bottom-nav{display:block;}
+  .app-status{display:none;}
+  .prac-form,.fc-wrap,.editor-main,.photo-layout{padding:1rem;}
+  .support-chat{width:calc(100vw - 3rem);right:1.5rem;}
+  .support-fab{bottom:calc(4.5rem + var(--safe-bottom));}
+  .pay-plans{grid-template-columns:1fr;}
+}
+@media(max-width:480px){
+  .metrics{grid-template-columns:1fr 1fr;}
+  .hero-h1{font-size:30px;}
+  .fc-grid{grid-template-columns:1fr;}
+  .qa-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- UPDATE BANNER -->
+<div id="update-banner">
+  <div class="ub-txt">
+    <strong>StudyLab v2.1 is available</strong>
+    <span>New: AI formula detection, improved PDF export, bug fixes</span>
+  </div>
+  <button class="ub-install" onclick="installUpdate()">Update now</button>
+  <button class="ub-dismiss" onclick="document.getElementById('update-banner').classList.remove('show')">×</button>
+</div>
+
+<!-- ══════════ LANDING ══════════ -->
+<div class="view active" id="view-landing">
+  <nav class="l-nav">
+    <div class="l-logo">Study<span>Lab</span></div>
+    <div class="l-links">
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+    </div>
+    <div class="l-nav-r">
+      <button class="btn-ghost" onclick="openAuth('login')">Log in</button>
+      <button class="btn-primary" onclick="openAuth('signup')">Get started free</button>
+      <button class="hamburger" onclick="document.getElementById('mob-menu').classList.add('open')">☰</button>
+    </div>
+  </nav>
+
+  <div class="mob-menu" id="mob-menu">
+    <button class="mob-menu-close" onclick="document.getElementById('mob-menu').classList.remove('open')">×</button>
+    <a href="#how" onclick="document.getElementById('mob-menu').classList.remove('open')">How it works</a>
+    <a href="#features" onclick="document.getElementById('mob-menu').classList.remove('open')">Features</a>
+    <a href="#pricing" onclick="document.getElementById('mob-menu').classList.remove('open')">Pricing</a>
+    <a href="#" onclick="openAuth('login');document.getElementById('mob-menu').classList.remove('open')">Log in</a>
+    <a href="#" onclick="openAuth('signup');document.getElementById('mob-menu').classList.remove('open')" style="color:var(--green);">Get started free →</a>
+  </div>
+
+  <section>
+    <div class="hero">
+      <div>
+        <div class="hero-badge"><span class="hero-pulse"></span>AI-Powered for Students</div>
+        <h1 class="hero-h1">Write lab reports<br/><em>in seconds,</em><br/>not hours.</h1>
+        <p class="hero-sub">Enter your aim, observations & readings — StudyLab's AI writes your complete formatted practical report, does all calculations, and auto-generates notes & flashcards.</p>
+        <div class="hero-ctas">
+          <button class="btn-green" onclick="openAuth('signup')">Start for free →</button>
+          <button class="btn-ghost" onclick="openPayment()">View pricing</button>
+        </div>
+        <p class="hero-note">✓ Free tier included &nbsp;·&nbsp; <b>No credit card required</b> &nbsp;·&nbsp; Works on any device</p>
+      </div>
+      <div class="hero-mock">
+        <div class="mock-bar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div><div class="mock-title">Acid-Base Titration — Lab 4</div></div>
+        <div class="mock-body">
+          <div class="mock-lbl">Aim</div>
+          <div class="mock-field">To find concentration of HCl using NaOH titration.</div>
+          <div class="mock-lbl">Readings</div>
+          <table class="mock-tbl"><thead><tr><th>Trial</th><th>Initial</th><th>Final</th><th>Vol.</th></tr></thead><tbody>
+            <tr><td>1</td><td>0.00</td><td>24.80</td><td class="g">24.80</td></tr>
+            <tr><td>2</td><td>0.00</td><td>24.90</td><td class="g">24.90</td></tr>
+          </tbody></table>
+          <div class="mock-btn">✦ Generate Full Report with AI</div>
+          <div class="mock-ai"><strong>AI Generated ✓</strong><br/>Theory: Acid-base titration is a quantitative method…<br/>C(HCl) = (0.1 × 24.85)/25 = <strong>0.0994 M</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="social">
+    <div><div class="stat-n">12,400+</div><div class="stat-l">Reports generated</div></div>
+    <div><div class="stat-n">3,800+</div><div class="stat-l">Active students</div></div>
+    <div><div class="stat-n">4.9 ★</div><div class="stat-l">Average rating</div></div>
+    <div><div class="stat-n">40+</div><div class="stat-l">Schools & colleges</div></div>
+  </div>
+
+  <section class="section" id="how">
+    <div class="sec-tag">How it works</div>
+    <h2 class="sec-h">From raw data to polished report in 3 steps</h2>
+    <p class="sec-sub">No templates to fill manually. No formatting headaches.</p>
+    <div class="steps-grid">
+      <div class="step"><div class="step-n">01</div><div class="step-icon">📋</div><div class="step-title">Enter your observations</div><div class="step-desc">Type your aim, materials & readings. Smart table auto-calculates volumes and averages as you type.</div></div>
+      <div class="step"><div class="step-n">02</div><div class="step-icon">⚡</div><div class="step-title">AI writes the report</div><div class="step-desc">Choose your format (School, APA, CBSE) — AI writes theory, procedure, calculations, results & conclusion.</div></div>
+      <div class="step"><div class="step-n">03</div><div class="step-icon">🚀</div><div class="step-title">Export & collaborate</div><div class="step-desc">Download as PDF, share with your study group, or co-edit in real time with classmates.</div></div>
+    </div>
+  </section>
+
+  <div class="feats-bg" id="features">
+    <div class="feats-wrap">
+      <div class="sec-tag">Features</div>
+      <h2 class="sec-h">Everything a student actually needs</h2>
+      <div class="feats-grid">
+        <div class="feat"><div class="feat-ico g">🧪</div><div><div class="feat-title">AI Practical Report Writer</div><div class="feat-desc">Enter observations, upload diagrams, pick your format. AI writes the full experiment write-up including theory, calculations & conclusion.</div></div></div>
+        <div class="feat"><div class="feat-ico g">🧮</div><div><div class="feat-title">Auto Calculations</div><div class="feat-desc">Smart engine handles titration, Ohm's law, pendulum formulas and more — shows full working exactly as teachers want.</div></div></div>
+        <div class="feat"><div class="feat-ico a">📝</div><div><div class="feat-title">Smart Notes + AI Summary</div><div class="feat-desc">Write notes freely. Summarize with AI to get key points, a concise overview, and an exam tip in seconds.</div></div></div>
+        <div class="feat"><div class="feat-ico a">🃏</div><div><div class="feat-title">Auto Flashcard Generator</div><div class="feat-desc">One click turns your notes into revision flashcards — organized by subject, colour-coded, ready to study.</div></div></div>
+        <div class="feat"><div class="feat-ico s">📷</div><div>
+          <div class="feat-title">Photo Capture & AI Analysis <span class="feat-lock">Scholar+</span></div>
+          <div class="feat-desc">Photograph your handwritten lab reports, notes, or diagrams. AI instantly extracts data, summarizes content, detects errors, and converts it to a clean digital document.</div>
+        </div></div>
+        <div class="feat"><div class="feat-ico r">👥</div><div><div class="feat-title">Study Group Collaboration</div><div class="feat-desc">Share documents with your study group, see who's online, and co-edit reports in real time.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4-TIER PRICING -->
+  <section class="section" id="pricing">
+    <div class="sec-tag">Pricing</div>
+    <h2 class="sec-h">Four plans, one for every student</h2>
+    <p class="sec-sub">Start free. Upgrade when you need more. Cancel anytime.</p>
+    <div class="price-grid">
+      <div class="price-card">
+        <div class="p-badge">Free forever</div>
+        <div class="p-name">Basic</div><div class="p-desc">Try it out</div>
+        <div><span class="p-amount">₹0</span><span class="p-per">/ month</span></div>
+        <div class="pf-line"></div>
+        <ul class="p-feats">
+          <li>5 AI reports / month</li>
+          <li>10 notes</li>
+          <li>Basic flashcards</li>
+          <li class="off">No PDF export</li>
+          <li class="off">No calculations engine</li>
+          <li class="off">No photo capture</li>
+        </ul>
+        <button class="p-cta" onclick="openAuth('signup')">Get started free</button>
+      </div>
+      <div class="price-card feat-card">
+        <div class="p-badge">Most popular</div>
+        <div class="p-name">Pro</div><div class="p-desc">Serious students</div>
+        <div><span class="p-amount"><sup>₹</sup>199</span><span class="p-per">/ month</span></div>
+        <div class="pf-line"></div>
+        <ul class="p-feats">
+          <li>Unlimited AI reports</li>
+          <li>Unlimited notes & flashcards</li>
+          <li>All calculation engines</li>
+          <li>PDF & Word export</li>
+          <li>5 collaborators</li>
+          <li class="off">No photo capture</li>
+        </ul>
+        <button class="p-cta" onclick="openPaymentPlan('pro')">Get Pro — ₹199/mo</button>
+      </div>
+      <div class="price-card scholar-card">
+        <div class="p-badge" style="background:var(--scholar-l);color:var(--scholar-m);">New ✦ Photo AI</div>
+        <div class="p-name" style="color:var(--scholar);">Scholar</div><div class="p-desc">Photo AI power</div>
+        <div><span class="p-amount" style="color:var(--scholar-m)"><sup style="color:var(--scholar-m)">₹</sup>349</span><span class="p-per">/ month</span></div>
+        <div class="pf-line"></div>
+        <ul class="p-feats">
+          <li>Everything in Pro</li>
+          <li class="cam">📷 Photo capture & AI analysis</li>
+          <li class="cam">📷 Handwriting recognition</li>
+          <li class="cam">📷 Error detection in photos</li>
+          <li class="cam">📷 Auto data extraction</li>
+          <li>8 collaborators</li>
+        </ul>
+        <button class="p-cta scholar-cta" onclick="openPaymentPlan('scholar')">Get Scholar — ₹349/mo</button>
+      </div>
+      <div class="price-card">
+        <div class="p-badge">For groups</div>
+        <div class="p-name">Study Group</div><div class="p-desc">Groups & tuitions</div>
+        <div><span class="p-amount"><sup>₹</sup>499</span><span class="p-per">/ month</span></div>
+        <div class="pf-line"></div>
+        <ul class="p-feats">
+          <li>Everything in Scholar</li>
+          <li class="cam">📷 All photo AI features</li>
+          <li>10 collaborators</li>
+          <li>Shared document library</li>
+          <li>Admin dashboard</li>
+          <li>Priority AI + email support</li>
+        </ul>
+        <button class="p-cta" onclick="openPaymentPlan('group')">Get Group — ₹499/mo</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0;">
+    <div class="sec-tag">Students love it</div>
+    <h2 class="sec-h">Real results, real students</h2>
+    <div class="testi-grid">
+      <div class="testi"><div class="t-stars">★★★★★</div><div class="t-text">"Chemistry practicals used to take me 3 hours. Now 10 minutes and it looks more professional than anything I wrote by hand."</div><div class="t-auth"><div class="t-av" style="background:var(--green-l);color:var(--green);">AK</div><div><div class="t-name">Aryan K.</div><div class="t-role">Class 12 · Delhi</div></div></div></div>
+      <div class="testi"><div class="t-stars">★★★★★</div><div class="t-text">"The photo capture feature is unreal. I took a pic of my handwritten notes and it converted them to a perfect digital summary with key points."</div><div class="t-auth"><div class="t-av" style="background:var(--scholar-l);color:var(--scholar-m);">PR</div><div><div class="t-name">Priya R.</div><div class="t-role">B.Sc. 1st Year · Mumbai</div></div></div></div>
+      <div class="testi"><div class="t-stars">★★★★★</div><div class="t-text">"The calculation engine shows all the working step by step. My physics teacher was genuinely impressed with the Ohm's Law report."</div><div class="t-auth"><div class="t-av" style="background:var(--red-l);color:var(--red);">RJ</div><div><div class="t-name">Rohan J.</div><div class="t-role">Class 11 · Punjab</div></div></div></div>
+    </div>
+  </section>
+
+  <div class="cta-banner">
+    <div><div class="cta-h">Never stress about lab reports again.</div><div class="cta-sub">Join 3,800+ students already using StudyLab.</div></div>
+    <button class="btn-green" style="flex-shrink:0;font-size:15px;padding:14px 30px;" onclick="openAuth('signup')">Get started free →</button>
+  </div>
+
+  <footer>
+    <div class="ft-logo">Study<span>Lab</span></div>
+    <div class="ft-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a><a href="#">Blog</a></div>
+    <div class="ft-copy">© 2025 StudyLab · Made for students</div>
+  </footer>
+</div>
+
+<!-- ══════════ DASHBOARD ══════════ -->
+<div class="view" id="view-dashboard">
+  <nav class="d-nav">
+    <div class="d-logo" onclick="showView('landing')">Study<span>Lab</span></div>
+    <div class="d-nav-r">
+      <span class="pro-badge badge-scholar" id="plan-badge">SCHOLAR</span>
+      <button class="upgrade-btn" onclick="openPayment()">Upgrade</button>
+      <div class="d-av">AK</div>
+    </div>
+  </nav>
+  <div class="dash-layout">
+    <div class="dash-sidebar">
+      <div class="ds-lbl">Navigation</div>
+      <div class="ds-item active" onclick="showDashTab('dash-home')"><span class="ds-item-ico">🏠</span>Dashboard</div>
+      <div class="ds-item" onclick="showView('app');switchTab('practical')"><span class="ds-item-ico">🧪</span>Reports</div>
+      <div class="ds-item" onclick="showView('app');switchTab('notes')"><span class="ds-item-ico">📝</span>Notes</div>
+      <div class="ds-item" onclick="showView('app');switchTab('flashcards')"><span class="ds-item-ico">🃏</span>Flashcards</div>
+      <div class="ds-item" onclick="showView('app');switchTab('photo')"><span class="ds-item-ico">📷</span>Photo Capture</div>
+      <div class="ds-sep"></div>
+      <div class="ds-lbl">Owner</div>
+      <div class="ds-item" onclick="showDashTab('dash-reco')"><span class="ds-item-ico">💡</span>Recommendations</div>
+      <div class="ds-item" onclick="showDashTab('dash-updates')"><span class="ds-item-ico">🔄</span>Updates</div>
+      <div class="ds-sep"></div>
+      <div class="ds-lbl">Account</div>
+      <div class="ds-item" onclick="openPayment()"><span class="ds-item-ico">💳</span>Billing</div>
+      <div class="ds-item" onclick="showView('landing')"><span class="ds-item-ico">🚪</span>Log out</div>
+    </div>
+    <div class="dash-main">
+
+      <!-- HOME TAB -->
+      <div id="dash-home">
+        <div class="dash-h" style="margin-bottom:4px;">Good morning, Aryan ☀️</div>
+        <div style="font-size:14px;color:var(--ink3);margin-bottom:1.5rem;">You have 3 reports due this week. 14-day streak going strong!</div>
+        <div class="metrics">
+          <div class="metric"><div class="metric-n">23</div><div class="metric-l">Reports generated</div><div class="metric-ch ch-up">↑ 4 this week</div></div>
+          <div class="metric"><div class="metric-n">47</div><div class="metric-l">Notes created</div><div class="metric-ch ch-up">↑ 8 this month</div></div>
+          <div class="metric"><div class="metric-n">128</div><div class="metric-l">Flashcards</div><div class="metric-ch ch-up">↑ 24 from AI</div></div>
+          <div class="metric"><div class="metric-n">14</div><div class="metric-l">Day streak 🔥</div><div class="metric-ch ch-up">Personal best!</div></div>
+        </div>
+        <div class="dash-grid">
+          <div class="dash-card">
+            <div class="dch"><div class="dch-title">Recent Documents</div><div class="dch-action" onclick="showView('app');switchTab('practical')">View all →</div></div>
+            <div class="doc-list">
+              <div class="doc-row" onclick="showView('app');switchTab('practical')"><div class="doc-ico g">🧪</div><div class="doc-info"><div class="doc-name">Acid-Base Titration</div><div class="doc-meta"><span>2 hrs ago</span><span>Chemistry · Lab 4</span></div></div><div class="doc-status ds-done">Done</div></div>
+              <div class="doc-row" onclick="showView('app');switchTab('practical')"><div class="doc-ico a">⚡</div><div class="doc-info"><div class="doc-name">Ohm's Law Verification</div><div class="doc-meta"><span>Yesterday</span><span>Physics · Lab 3</span></div></div><div class="doc-status ds-done">Done</div></div>
+              <div class="doc-row" onclick="showView('app');switchTab('photo')"><div class="doc-ico" style="background:var(--scholar-l);">📷</div><div class="doc-info"><div class="doc-name">Handwritten Notes — Biology</div><div class="doc-meta"><span>2 days ago</span><span>Photo AI Analysis</span></div></div><div class="doc-status ds-done">Analysed</div></div>
+              <div class="doc-row" onclick="showView('app');switchTab('practical')"><div class="doc-ico b">🔬</div><div class="doc-info"><div class="doc-name">Simple Pendulum</div><div class="doc-meta"><span>3 days ago</span><span>Physics · Lab 2</span></div></div><div class="doc-status ds-draft">Draft</div></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:1rem;">
+            <div class="dash-card">
+              <div class="dch"><div class="dch-title">Study Streak</div></div>
+              <div class="dcb">
+                <div class="streak-box"><div class="streak-n">14</div><div class="streak-txt"><strong>Days 🔥</strong><p>Personal best! Keep going.</p></div></div>
+                <div style="font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;">Last 28 days</div>
+                <div class="act-grid" id="act-grid"></div>
+              </div>
+            </div>
+            <div class="dash-card">
+              <div class="dch"><div class="dch-title">Monthly Usage</div></div>
+              <div class="dcb">
+                <div class="usage-item"><div class="usage-top"><span>AI Reports</span><span style="font-weight:600;">23 / ∞</span></div><div class="usage-bar"><div class="usage-fill" style="width:58%;"></div></div></div>
+                <div class="usage-item"><div class="usage-top"><span>Photo Analyses</span><span style="font-weight:600;">8 / ∞</span></div><div class="usage-bar"><div class="usage-fill" style="width:32%;background:var(--scholar-m);"></div></div></div>
+                <div class="usage-item"><div class="usage-top"><span>Collaborators</span><span style="font-weight:600;">4 / 8</span></div><div class="usage-bar"><div class="usage-fill" style="width:50%;"></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-card" style="margin-bottom:1.5rem;">
+          <div class="dch"><div class="dch-title">Quick Actions</div></div>
+          <div class="dcb">
+            <div class="qa-grid">
+              <div class="qa-btn" onclick="showView('app');switchTab('practical')"><div class="qa-icon">🧪</div><div class="qa-label">New Lab Report</div></div>
+              <div class="qa-btn" onclick="showView('app');switchTab('notes')"><div class="qa-icon">📝</div><div class="qa-label">New Note</div></div>
+              <div class="qa-btn" onclick="showView('app');switchTab('photo')"><div class="qa-icon">📷</div><div class="qa-label">Capture Photo</div></div>
+              <div class="qa-btn" onclick="showView('app');switchTab('flashcards')"><div class="qa-icon">🃏</div><div class="qa-label">Study Flashcards</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="plan-banner">
+          <h4>You're on Scholar Plan 📷</h4>
+          <p>Photo AI, unlimited reports, PDF export, 8 collaborators. Renews 28 Apr 2026 · ₹349/month.</p>
+          <button onclick="openPayment()">Manage Subscription</button>
+        </div>
+      </div>
+
+      <!-- RECOMMENDATIONS TAB -->
+      <div id="dash-reco" style="display:none;">
+        <div class="dash-h" style="margin-bottom:.5rem;">Monthly Recommendations</div>
+        <p style="font-size:14px;color:var(--ink3);margin-bottom:1.5rem;">AI-generated improvement suggestions. Review and approve or dismiss each one — nothing ships without your verification.</p>
+        <div class="reco-badge">💡 April 2026 — 4 pending</div>
+        <div id="reco-list"></div>
+      </div>
+
+      <!-- UPDATES TAB -->
+      <div id="dash-updates" style="display:none;">
+        <div class="dash-h" style="margin-bottom:.5rem;">Patch Updates</div>
+        <p style="font-size:14px;color:var(--ink3);margin-bottom:1.5rem;">Automated update history. Your app checks for updates on every load and notifies users.</p>
+        <div id="updates-list"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ APP ══════════ -->
+<div class="view" id="view-app">
+  <nav class="app-nav">
+    <div class="a-logo" onclick="showView('dashboard')">Study<span>Lab</span></div>
+    <div class="app-tabs">
+      <div class="app-tab active" onclick="switchTab('practical')">Practical Reports</div>
+      <div class="app-tab" onclick="switchTab('notes')">Notes & AI</div>
+      <div class="app-tab" onclick="switchTab('photo')">📷 Photo AI</div>
+      <div class="app-tab" onclick="switchTab('flashcards')">Flashcards</div>
+    </div>
+    <div class="app-nav-r">
+      <span class="pro-badge badge-scholar">SCHOLAR</span>
+      <button class="upgrade-btn" onclick="openPayment()">Upgrade</button>
+      <div class="d-av">AK</div>
+    </div>
+  </nav>
+  <div class="app-body">
+    <div class="app-sidebar">
+      <div class="sb-head"><button class="sb-new">+ New Document</button></div>
+      <div class="sb-sec">
+        <div class="sb-lbl">Recent</div>
+        <div class="sb-item active"><span class="sb-ico">🧪</span>Acid-Base Titration<span class="sb-cnt">Lab 4</span></div>
+        <div class="sb-item"><span class="sb-ico">📷</span>Biology Notes Photo<span class="sb-cnt">AI</span></div>
+        <div class="sb-item"><span class="sb-ico">⚡</span>Ohm's Law<span class="sb-cnt">Lab 3</span></div>
+        <div class="sb-lbl">Subjects</div>
+        <div class="sb-item"><span class="sb-ico">🧬</span>Biology</div>
+        <div class="sb-item"><span class="sb-ico">⚗️</span>Chemistry</div>
+        <div class="sb-item"><span class="sb-ico">📐</span>Physics</div>
+      </div>
+      <div class="sb-collab">
+        <div class="sb-collab-l">Study Group</div>
+        <div class="sb-avs">
+          <div class="sb-av" style="background:var(--green-l);color:var(--green);">AK</div>
+          <div class="sb-av" style="background:var(--blue-l);color:var(--blue);">SM</div>
+          <div class="sb-av" style="background:var(--amber-l);color:var(--amber);">RJ</div>
+        </div>
+        <div style="font-size:12px;color:var(--ink3);margin-top:6px;margin-bottom:7px;">3 members · 2 online</div>
+        <button class="sb-share">Share & Collaborate</button>
+      </div>
+    </div>
+
+    <div class="app-main">
+      <!-- PRACTICAL -->
+      <div class="app-panel active" id="panel-practical">
+        <div class="prac-layout">
+          <div class="prac-form">
+            <div style="margin-bottom:1.25rem;"><div style="font-family:'Instrument Serif',serif;font-size:21px;letter-spacing:-.5px;margin-bottom:2px;">Practical Report Builder</div><div style="font-size:13px;color:var(--ink3);">Fill in your data — AI writes the complete formatted report.</div></div>
+            <div class="f-block"><label class="f-lbl">Experiment Title</label><input type="text" id="exp-title" value="Acid-Base Titration: Finding Concentration of HCl"/></div>
+            <div class="f-block"><label class="f-lbl">Aim / Objective</label><textarea id="exp-aim">To determine the concentration of hydrochloric acid (HCl) using a standardized NaOH solution by acid-base titration.</textarea></div>
+            <div class="f-block"><label class="f-lbl">Materials & Apparatus</label><textarea id="exp-mats" style="min-height:56px;">Burette (50 mL), conical flask (250 mL), pipette (25 mL), NaOH (0.1 M), HCl (unknown), phenolphthalein indicator, distilled water.</textarea></div>
+            <div class="f-block">
+              <label class="f-lbl">Observations / Readings</label>
+              <table class="rtbl"><thead><tr><th>Trial</th><th>Initial (mL)</th><th>Final (mL)</th><th>Vol. Used</th></tr></thead>
+              <tbody id="readings-body">
+                <tr><td><input type="text" value="1" style="width:40px;text-align:center;"/></td><td><input type="number" value="0.00" step="0.05" class="ini"/></td><td><input type="number" value="24.80" step="0.05" class="fin"/></td><td><input type="number" class="vol auto" readonly/></td></tr>
+                <tr><td><input type="text" value="2" style="width:40px;text-align:center;"/></td><td><input type="number" value="0.00" step="0.05" class="ini"/></td><td><input type="number" value="24.90" step="0.05" class="fin"/></td><td><input type="number" class="vol auto" readonly/></td></tr>
+                <tr><td><input type="text" value="3" style="width:40px;text-align:center;"/></td><td><input type="number" value="0.00" step="0.05" class="ini"/></td><td><input type="number" value="25.10" step="0.05" class="fin"/></td><td><input type="number" class="vol auto" readonly/></td></tr>
+              </tbody></table>
+              <button class="add-row" onclick="addRow()">+ Add Row</button>
+            </div>
+            <div class="calc-box">
+              <div class="calc-ttl">Calculations</div>
+              <div class="calc-row"><label>Concentration NaOH (M)</label><input type="number" id="c-naoh" value="0.1" step="0.01"/></div>
+              <div class="calc-row"><label>Volume of HCl (mL)</label><input type="number" id="v-hcl" value="25" step="0.5"/></div>
+              <button class="calc-do" onclick="doCalc()">Calculate</button>
+              <div class="calc-res" id="calc-res" style="display:none;"></div>
+            </div>
+            <div class="f-block"><label class="f-lbl">Report Format</label><div class="fmt-chips"><div class="fmt-chip sel" onclick="selFmt(this)">School / College</div><div class="fmt-chip" onclick="selFmt(this)">APA University</div><div class="fmt-chip" onclick="selFmt(this)">Lab Notebook</div><div class="fmt-chip" onclick="selFmt(this)">CBSE / ICSE</div></div></div>
+            <div class="f-block">
+              <label class="f-lbl">Upload Files (optional)</label>
+              <div class="upload-z" onclick="document.getElementById('file-in').click()">
+                <div style="font-size:24px;">📎</div>
+                <p><strong>Click to upload</strong> or drag & drop · PDF, PNG, JPG</p>
+                <input type="file" id="file-in" style="display:none;" multiple onchange="handleUpload(this)"/>
+              </div>
+              <div id="uploaded-files" style="margin-top:5px;font-size:12px;color:var(--green);"></div>
+            </div>
+            <button class="gen-btn" id="gen-btn" onclick="generateReport()">✦ Generate Full Report with AI</button>
+          </div>
+          <div class="prac-prev">
+            <div class="prev-head"><span class="prev-title">Report Preview</span><div class="prev-acts"><button class="prev-btn" onclick="copyReport()">Copy</button><button class="prev-btn" onclick="window.print()">Export PDF</button></div></div>
+            <div class="prev-body">
+              <div class="loading" id="loading"><span></span><span></span><span></span></div>
+              <div class="prev-doc" id="preview-doc"><div class="prev-empty"><div style="font-size:34px;margin-bottom:12px;">📄</div><p style="font-size:14px;">Fill in your details then click<br/><strong>Generate Report</strong>.</p></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHOTO CAPTURE PANEL -->
+      <div class="app-panel" id="panel-photo">
+        <div class="photo-layout" id="photo-layout-inner">
+          <div class="photo-header">
+            <h2>📷 Photo Capture & AI Analysis</h2>
+            <p>Take a photo or upload an image of any lab report, notes, or diagram — AI will analyse, extract data, and convert it to a clean digital document.</p>
+          </div>
+          <!-- Shown only if not Scholar/Group plan -->
+          <div id="photo-lock-banner" style="display:none;">
+            <div class="scholar-banner">
+              <div class="scholar-banner-icon">📷</div>
+              <div>
+                <h3>Scholar or Group Plan required</h3>
+                <p>Photo Capture & AI Analysis is available on the Scholar (₹349/mo) and Study Group (₹499/mo) plans. Upgrade to photograph your lab reports and notes — AI will instantly extract data and convert them to digital documents.</p>
+                <button class="upgrade-cta" onclick="openPayment()">Upgrade to Scholar — ₹349/mo →</button>
+              </div>
+            </div>
+          </div>
+          <!-- Shown only if Scholar/Group plan -->
+          <div id="photo-feature" style="display:block;">
+            <div class="photo-grid">
+              <!-- Camera capture -->
+              <div class="photo-zone" onclick="triggerCamera()">
+                <div class="photo-zone-icon">📷</div>
+                <div class="photo-zone-label">Take Photo</div>
+                <div class="photo-zone-sub">Use your device camera</div>
+                <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none;" onchange="handlePhotoCapture(this,'camera')"/>
+              </div>
+              <!-- Gallery upload -->
+              <div class="photo-zone" onclick="document.getElementById('gallery-input').click()">
+                <div class="photo-zone-icon">🖼️</div>
+                <div class="photo-zone-label">Upload from Gallery</div>
+                <div class="photo-zone-sub">JPG, PNG, HEIC supported</div>
+                <input type="file" id="gallery-input" accept="image/*" style="display:none;" onchange="handlePhotoCapture(this,'gallery')" multiple/>
+              </div>
+              <!-- Screenshot/file -->
+              <div class="photo-zone" onclick="document.getElementById('file-photo-input').click()">
+                <div class="photo-zone-icon">📄</div>
+                <div class="photo-zone-label">Upload Document</div>
+                <div class="photo-zone-sub">PDF, PNG, JPG</div>
+                <input type="file" id="file-photo-input" accept="image/*,.pdf" style="display:none;" onchange="handlePhotoCapture(this,'file')"/>
+              </div>
+            </div>
+
+            <!-- Analysis type selector -->
+            <div class="f-block" style="margin-bottom:1.25rem;">
+              <label class="f-lbl">What should AI analyse?</label>
+              <div class="fmt-chips" id="analysis-type-chips">
+                <div class="fmt-chip sel" onclick="selAnalysisType(this,'lab-report')">Lab Report</div>
+                <div class="fmt-chip" onclick="selAnalysisType(this,'notes')">Notes / Theory</div>
+                <div class="fmt-chip" onclick="selAnalysisType(this,'diagram')">Diagram / Graph</div>
+                <div class="fmt-chip" onclick="selAnalysisType(this,'formula')">Formula Sheet</div>
+              </div>
+            </div>
+
+            <!-- Captured photos list -->
+            <div id="captured-photos" style="display:none;">
+              <div style="font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--ink3);margin-bottom:.75rem;">Captured Images</div>
+              <div class="photo-grid" id="photo-preview-grid"></div>
+              <button class="gen-btn" id="analyze-btn" onclick="analyzePhotos()" style="margin-top:.5rem;">📷 Analyse with AI</button>
+            </div>
+
+            <!-- Analysis result -->
+            <div id="analysis-result" style="display:none;">
+              <div class="analysis-result">
+                <div class="analysis-result-head">
+                  <div class="ar-icon">📷</div>
+                  <div><div class="ar-title">AI Analysis Complete</div><div class="ar-sub" id="ar-sub">Lab Report detected</div></div>
+                </div>
+                <div class="loading" id="photo-loading"><span></span><span></span><span></span></div>
+                <div class="ar-body" id="ar-body"></div>
+                <div class="ar-actions" id="ar-actions" style="display:none;">
+                  <button class="ar-action-btn" onclick="importToReport()">Import to Report Builder</button>
+                  <button class="ar-action-btn" onclick="saveAnalysis()">Save as Note</button>
+                  <button class="ar-action-ghost" onclick="resetPhotoCapture()">Analyse another</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTES -->
+      <div class="app-panel" id="panel-notes">
+        <div class="notes-layout">
+          <div class="notes-list">
+            <div class="notes-search"><input type="text" placeholder="Search notes…"/></div>
+            <div class="notes-items">
+              <div class="note-row active"><div class="note-row-title">Cell Division — Mitosis & Meiosis</div><div class="note-row-meta"><span>2 days ago</span><span class="note-tag t-bio">Biology</span></div></div>
+              <div class="note-row"><div class="note-row-title">Electrochemistry: Galvanic Cells</div><div class="note-row-meta"><span>4 days ago</span><span class="note-tag t-chem">Chemistry</span></div></div>
+              <div class="note-row"><div class="note-row-title">Newton's Laws of Motion</div><div class="note-row-meta"><span>1 week ago</span><span class="note-tag t-phys">Physics</span></div></div>
+              <div class="note-row"><div class="note-row-title">Integration by Parts</div><div class="note-row-meta"><span>1 week ago</span><span class="note-tag t-math">Maths</span></div></div>
+            </div>
+          </div>
+          <div class="notes-editor">
+            <div class="notes-tb">
+              <button class="tb-btn"><b>B</b></button><button class="tb-btn"><i>I</i></button><button class="tb-btn"><u>U</u></button>
+              <div class="tb-sep"></div>
+              <button class="tb-btn">H1</button><button class="tb-btn">• List</button>
+              <button class="ai-sum-btn" onclick="doSummarize()">✦ Summarize with AI</button>
+            </div>
+            <div class="editor-body">
+              <div class="editor-main">
+                <input class="ed-title" type="text" value="Cell Division — Mitosis & Meiosis"/>
+                <textarea class="ed-content">Cell division is the process by which a parent cell divides into daughter cells.
+
+MITOSIS — somatic cells, 2 identical diploid daughter cells (2n).
+1. Prophase — chromatin condenses, spindle forms
+2. Metaphase — chromosomes align at metaphase plate
+3. Anaphase — sister chromatids separate
+4. Telophase — nuclear envelopes reform, cytokinesis
+
+MEIOSIS — reproductive cells, 4 unique haploid daughter cells (n).
+• Two rounds: Meiosis I and II
+• Crossing over in Prophase I increases genetic variation
+• Significance: maintains chromosome number across generations</textarea>
+              </div>
+              <div class="ai-side">
+                <div class="ai-side-head"><div class="ai-side-title">AI Summary</div><span class="ai-badge">AI</span></div>
+                <div class="ai-side-body" id="ai-panel-body"><p style="color:var(--ink3);font-size:13px;">Click <strong style="color:var(--ink);">Summarize with AI</strong> to get a summary, key points and an exam tip.</p></div>
+                <div class="ai-foot">
+                  <button class="ai-foot-btn" onclick="genFlashcards()">Generate Flashcards →</button>
+                  <button class="ai-foot-btn" onclick="window.print()">Export as PDF</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FLASHCARDS -->
+      <div class="app-panel" id="panel-flashcards">
+        <div class="fc-wrap">
+          <div class="fc-head">
+            <div><div style="font-family:'Instrument Serif',serif;font-size:21px;letter-spacing:-.5px;">Flashcards</div><div style="font-size:13px;color:var(--ink3);margin-top:2px;">Tap any card to reveal the answer.</div></div>
+            <button class="gen-btn" style="width:auto;padding:9px 18px;font-size:13px;" onclick="genFlashcards()">✦ Generate from Notes</button>
+          </div>
+          <div class="fc-grid" id="fc-grid">
+            <div class="fc-card" onclick="this.classList.toggle('revealed')" style="border-top:3px solid var(--green);"><span class="fc-tag" style="color:var(--green);">Biology</span><div class="fc-q">Key difference: mitosis vs meiosis?</div><div class="fc-a">Mitosis → 2 identical diploid cells. Meiosis → 4 unique haploid cells with crossing over.</div><span class="fc-hint">Tap to reveal</span></div>
+            <div class="fc-card" onclick="this.classList.toggle('revealed')" style="border-top:3px solid var(--amber);"><span class="fc-tag" style="color:var(--amber);">Chemistry</span><div class="fc-q">Molarity formula?</div><div class="fc-a">M = moles of solute / volume in litres. Units: mol/L.</div><span class="fc-hint">Tap to reveal</span></div>
+            <div class="fc-card" onclick="this.classList.toggle('revealed')" style="border-top:3px solid var(--red);"><span class="fc-tag" style="color:var(--red);">Physics</span><div class="fc-q">State Ohm's Law.</div><div class="fc-a">V = IR — voltage proportional to current at constant temperature.</div><span class="fc-hint">Tap to reveal</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="app-status">
+        <span><span class="s-dot"></span>AI ready</span>
+        <span>Plan: Scholar 📷</span>
+        <span>Group: 2 online</span>
+        <span style="margin-left:auto;color:var(--scholar-m);">📷 Photo AI active</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile bottom nav -->
+  <div class="bottom-nav">
+    <div class="bottom-nav-inner">
+      <div class="bn-item active" id="bn-practical" onclick="switchTab('practical');setBN('bn-practical')"><div class="bn-ico">🧪</div><div class="bn-label">Reports</div></div>
+      <div class="bn-item" id="bn-photo" onclick="switchTab('photo');setBN('bn-photo')"><div class="bn-ico">📷</div><div class="bn-label">Photo</div></div>
+      <div class="bn-item" id="bn-notes" onclick="switchTab('notes');setBN('bn-notes')"><div class="bn-ico">📝</div><div class="bn-label">Notes</div></div>
+      <div class="bn-item" id="bn-flashcards" onclick="switchTab('flashcards');setBN('bn-flashcards')"><div class="bn-ico">🃏</div><div class="bn-label">Cards</div></div>
+      <div class="bn-item" id="bn-dash" onclick="showView('dashboard')"><div class="bn-ico">🏠</div><div class="bn-label">Home</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SUPPORT CHAT ══════════ -->
+<button class="support-fab" id="support-fab" onclick="toggleSupportChat()">💬</button>
+<div class="support-chat" id="support-chat">
+  <div class="sc-head">
+    <div>
+      <div class="sc-head-title">StudyLab Support</div>
+      <div class="sc-head-sub">AI-powered · Replies instantly</div>
+    </div>
+    <button class="sc-close" onclick="toggleSupportChat()">×</button>
+  </div>
+  <div class="sc-messages" id="sc-messages">
+    <div class="sc-msg bot">👋 Hi! I'm the StudyLab AI support assistant. How can I help you today?</div>
+    <div class="sc-msg bot">I can help with: account issues, how-to questions, feature explanations, report errors, and more.</div>
+  </div>
+  <div class="sc-payment-notice">💳 For payment / billing issues, email <strong>billing@studylab.app</strong></div>
+  <div class="sc-input-area">
+    <input class="sc-input" id="sc-input" placeholder="Type your question…" onkeydown="if(event.key==='Enter')sendSupportMsg()"/>
+    <button class="sc-send" onclick="sendSupportMsg()">Send</button>
+  </div>
+</div>
+
+<!-- ══════════ AUTH MODAL ══════════ -->
+<div class="overlay" id="auth-overlay">
+  <div class="modal">
+    <button class="m-close" onclick="closeModal('auth-overlay')">×</button>
+    <div id="m-login" style="display:none;">
+      <div class="m-title">Welcome back</div>
+      <div class="m-sub">Log in to your StudyLab account.</div>
+      <div class="m-ig"><label class="m-lbl">Email</label><input type="text" placeholder="you@email.com"/></div>
+      <div class="m-ig"><label class="m-lbl">Password</label><input type="text" placeholder="••••••••"/></div>
+      <button class="m-btn" onclick="goToDashboard()">Log in →</button>
+      <div class="m-toggle">No account? <a onclick="toggleAuth()">Sign up free</a></div>
+    </div>
+    <div id="m-signup">
+      <div class="m-title">Start for free</div>
+      <div class="m-sub">Create your account — set up in 2 minutes.</div>
+      <div class="plan-sel">
+        <div class="plan-opt sel" onclick="selPlan(this)"><div class="po-name">Basic</div><div class="po-price">₹0</div><div class="po-desc">Try it free</div></div>
+        <div class="plan-opt" onclick="selPlan(this)"><div class="po-name">Pro</div><div class="po-price">₹199</div><div class="po-desc">Unlimited</div></div>
+      </div>
+      <div class="m-ig"><label class="m-lbl">Full Name</label><input type="text" placeholder="Your name"/></div>
+      <div class="m-ig"><label class="m-lbl">Email</label><input type="text" placeholder="you@email.com"/></div>
+      <div class="m-ig"><label class="m-lbl">Password</label><input type="text" placeholder="Create a password"/></div>
+      <button class="m-btn" onclick="goToDashboard()">Create account →</button>
+      <div class="m-div"><span>or</span></div>
+      <div class="m-toggle">Already have an account? <a onclick="toggleAuth()">Log in</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ PAYMENT MODAL ══════════ -->
+<div class="overlay" id="pay-overlay">
+  <div class="modal" style="max-width:520px;">
+    <button class="m-close" onclick="closeModal('pay-overlay')">×</button>
+    <div id="pay-step1">
+      <div class="m-title">Choose your plan</div>
+      <div class="m-sub">Billed monthly via Razorpay. Cancel anytime from your dashboard.</div>
+      <div class="pay-plans">
+        <div class="pay-plan sel" id="pp-pro" onclick="selPayPlan('pro')"><div class="pp-name">Pro</div><div class="pp-price">₹199</div><div class="pp-per">/month</div><div class="pp-feats">Unlimited reports<br/>PDF export<br/>5 collaborators</div></div>
+        <div class="pay-plan scholar-plan" id="pp-scholar" onclick="selPayPlan('scholar')"><div class="pp-name">Scholar 📷</div><div class="pp-price" style="color:var(--scholar-m);">₹349</div><div class="pp-per">/month</div><div class="pp-feats">Pro + Photo AI<br/>Handwriting OCR<br/>8 collaborators</div></div>
+        <div class="pay-plan" id="pp-group" onclick="selPayPlan('group')"><div class="pp-name">Study Group</div><div class="pp-price">₹499</div><div class="pp-per">/month</div><div class="pp-feats">Everything in Scholar<br/>10 collaborators<br/>Admin dashboard</div></div>
+      </div>
+      <div class="pay-summary">
+        <div class="psr"><span>Plan</span><span id="sum-plan">Pro</span></div>
+        <div class="psr"><span>Billing</span><span>Monthly (auto-renew)</span></div>
+        <div class="psr"><span>GST (18%)</span><span id="sum-gst">₹35.82</span></div>
+        <div class="psr"><span>Total today</span><span id="sum-total">₹234.82</span></div>
+      </div>
+      <div class="pay-method">
+        <div class="pm-lbl">Payment method</div>
+        <div class="pm-opts">
+          <div class="pm-opt sel" onclick="selPM(this)">UPI</div>
+          <div class="pm-opt" onclick="selPM(this)">Card</div>
+          <div class="pm-opt" onclick="selPM(this)">Net Banking</div>
+          <div class="pm-opt" onclick="selPM(this)">EMI</div>
+        </div>
+      </div>
+      <button class="rzp-btn" onclick="initRazorpay()">🔒 Pay with Razorpay</button>
+      <div class="rzp-secure">🔐 Secured by Razorpay · 256-bit SSL · PCI DSS compliant</div>
+    </div>
+    <div id="pay-step2" style="display:none;">
+      <div class="pay-success">
+        <div class="pay-success-ico">🎉</div>
+        <h3 style="font-family:'Instrument Serif',serif;font-size:26px;margin-bottom:.5rem;">Payment Successful!</h3>
+        <p style="font-size:14px;color:var(--ink3);margin-bottom:1.5rem;line-height:1.6;">Welcome to <span id="succ-plan">Scholar</span> Plan. Your account has been upgraded — all premium features are now unlocked.</p>
+        <button class="btn-green" style="width:100%;padding:12px;font-size:15px;" onclick="closeModal('pay-overlay');showView('dashboard')">Go to Dashboard →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// CONFIG — Replace these with your real keys
+// ═══════════════════════════════════════════
+const API = "https://api.anthropic.com/v1/messages";
+// IMPORTANT: In production, proxy API calls through your backend
+// to keep the Anthropic API key secret.
+// Your backend endpoint: POST /api/ai → calls Anthropic → returns response
+const BACKEND_API = "/api/ai"; // replace with your anything.com function URL
+
+const RZP_KEY = "rzp_test_YOUR_KEY_HERE"; // Replace with live key
+
+// User plan state (in production, fetch from your backend/auth)
+let userPlan = "scholar"; // "basic" | "pro" | "scholar" | "group"
+const hasPhotoAccess = () => userPlan === "scholar" || userPlan === "group";
+
+// ═══════════════════════════════════════════
+// APP VERSION & UPDATE SYSTEM
+// ═══════════════════════════════════════════
+const APP_VERSION = { current: "2.1.0", build: "2025-04-01" };
+const UPDATES_LOG = [
+  { version: "2.1.0", date: "Apr 1, 2026", type: "feature", title: "Photo AI launched", notes: "New Scholar plan with photo capture & AI analysis. Handwriting OCR, error detection, data extraction." },
+  { version: "2.0.3", date: "Mar 20, 2026", type: "fix", title: "PDF export bug fix", notes: "Fixed an issue where reports with special characters failed to export. Improved table rendering in exports." },
+  { version: "2.0.2", date: "Mar 10, 2026", type: "patch", title: "Performance improvements", notes: "AI response time reduced by 40%. Flashcard generation optimised. Mobile scroll fixed." },
+  { version: "2.0.1", date: "Feb 28, 2026", type: "fix", title: "Calculation engine fix", notes: "Titration formula edge case fixed. Added support for base-acid (NaOH as analyte) format." },
+  { version: "2.0.0", date: "Feb 15, 2026", type: "major", title: "Dashboard + Razorpay launched", notes: "Full dashboard with analytics, streak tracking, study group collaboration, and Razorpay payment integration." }
+];
+
+// Monthly AI-generated recommendations (owner sees these, approves/dismisses)
+const RECOMMENDATIONS = [
+  { id: 1, title: "Add voice-to-text input for observations", category: "Feature", priority: "High", status: "pending", date: "Apr 1, 2026", description: "Based on support chat analysis: 18% of support messages mention difficulty typing long observations on mobile. Adding voice input for the observations field could significantly improve mobile UX. Estimated dev time: 3–4 hours. Would increase Scholar plan perceived value.", impact: "High — reduces friction on mobile, potential 15% increase in mobile engagement." },
+  { id: 2, title: "Add WhatsApp sharing for reports", category: "Integration", priority: "Medium", status: "pending", date: "Apr 1, 2026", description: "Analysis of user flow shows 67% of users share reports externally. Adding a WhatsApp share button (native Web Share API) would reduce steps from 3 to 1. Quick win — under 1 hour to implement.", impact: "Medium — increases virality, each share exposes ~3-5 new potential users." },
+  { id: 3, title: "Introduce weekly email digest for study progress", category: "Retention", priority: "Medium", status: "pending", date: "Apr 1, 2026", description: "Streak tracking data shows users who receive progress reminders have 2x retention. Implementing a weekly email summary (reports created, streak, upcoming subjects) via Nodemailer or Resend would be low-cost and high-retention.", impact: "High — projected 20–25% improvement in monthly active user retention." },
+  { id: 4, title: "Add dark mode", category: "UI/UX", priority: "Low", status: "pending", date: "Apr 1, 2026", description: "3 support requests this month requested dark mode. CSS custom properties are already structured to support this — implementing a simple toggle would take ~2 hours and cover a common student use-case (studying at night).", impact: "Low-Medium — quality-of-life improvement, reduces eye strain for evening users." }
+];
+
+function checkForUpdates() {
+  const lastSeen = localStorage.getItem('sl_version');
+  if (lastSeen !== APP_VERSION.current) {
+    if (lastSeen) document.getElementById('update-banner').classList.add('show');
+    localStorage.setItem('sl_version', APP_VERSION.current);
+  }
+}
+
+function installUpdate() {
+  document.getElementById('update-banner').classList.remove('show');
+  alert("✅ You're on the latest version (" + APP_VERSION.current + "). All updates are applied automatically.");
+}
+
+function renderUpdates() {
+  const container = document.getElementById('updates-list');
+  if (!container) return;
+  const typeColor = { major: 'var(--green)', feature: 'var(--blue)', fix: 'var(--amber)', patch: 'var(--ink3)' };
+  container.innerHTML = UPDATES_LOG.map(u => `
+    <div style="background:var(--paper);border:1px solid var(--border);border-radius:var(--rlg);margin-bottom:1rem;overflow:hidden;">
+      <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;">
+        <span style="font-size:12px;font-weight:700;background:var(--paper2);color:${typeColor[u.type]};padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;">${u.type}</span>
+        <span style="font-size:14px;font-weight:600;">${u.title}</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--ink3);">v${u.version} · ${u.date}</span>
+      </div>
+      <div style="padding:1rem 1.25rem;font-size:13.5px;color:var(--ink2);line-height:1.65;">${u.notes}</div>
+    </div>`).join('');
+}
+
+function renderRecommendations() {
+  const container = document.getElementById('reco-list');
+  if (!container) return;
+  const statusBadge = { pending: 'rs-pending', approved: 'rs-approved', dismissed: 'rs-dismissed' };
+  const statusLabel = { pending: 'Pending review', approved: 'Approved ✓', dismissed: 'Dismissed' };
+  container.innerHTML = RECOMMENDATIONS.map(r => `
+    <div class="reco-card" id="reco-${r.id}">
+      <div class="reco-head">
+        <div>
+          <div class="reco-title">${r.title}</div>
+          <div class="reco-meta">${r.category} · Priority: ${r.priority} · ${r.date}</div>
+        </div>
+        <span class="reco-status ${statusBadge[r.status]}" id="rs-${r.id}">${statusLabel[r.status]}</span>
+      </div>
+      <div class="reco-body">
+        <p>${r.description}</p>
+        <p style="font-size:12.5px;font-weight:600;color:var(--green);">Impact: ${r.impact}</p>
+        ${r.status === 'pending' ? `<div class="reco-actions">
+          <button class="reco-approve" onclick="approveReco(${r.id})">✓ Approve & Schedule</button>
+          <button class="reco-dismiss" onclick="dismissReco(${r.id})">Dismiss</button>
+        </div>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+function approveReco(id) {
+  const r = RECOMMENDATIONS.find(x => x.id === id);
+  if (r) { r.status = 'approved'; renderRecommendations(); alert('✅ "' + r.title + '" approved and scheduled for next sprint. You\'ll see it in the Updates log once deployed.'); }
+}
+function dismissReco(id) {
+  const r = RECOMMENDATIONS.find(x => x.id === id);
+  if (r) { r.status = 'dismissed'; renderRecommendations(); }
+}
+
+// ═══════════════════════════════════════════
+// VIEWS & NAVIGATION
+// ═══════════════════════════════════════════
+function showView(v) {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-' + v).classList.add('active');
+  window.scrollTo(0, 0);
+  if (v === 'dashboard') { buildActivityGrid(); renderRecommendations(); renderUpdates(); }
+}
+function goToDashboard() { closeModal('auth-overlay'); showView('dashboard'); }
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('open'); }));
+
+function openAuth(mode) {
+  document.getElementById('m-login').style.display = mode === 'login' ? 'block' : 'none';
+  document.getElementById('m-signup').style.display = mode === 'signup' ? 'block' : 'none';
+  openModal('auth-overlay');
+}
+function toggleAuth() {
+  const l = document.getElementById('m-login'), s = document.getElementById('m-signup');
+  l.style.display = l.style.display === 'none' ? 'block' : 'none';
+  s.style.display = s.style.display === 'none' ? 'block' : 'none';
+}
+function selPlan(el) { document.querySelectorAll('.plan-opt').forEach(p => p.classList.remove('sel')); el.classList.add('sel'); }
+
+function showDashTab(tab) {
+  ['dash-home','dash-reco','dash-updates'].forEach(t => { const el = document.getElementById(t); if(el) el.style.display = 'none'; });
+  const el = document.getElementById(tab); if(el) el.style.display = 'block';
+  document.querySelectorAll('.ds-item').forEach(i => i.classList.remove('active'));
+  event.target.closest('.ds-item').classList.add('active');
+}
+
+// ═══════════════════════════════════════════
+// APP TABS
+// ═══════════════════════════════════════════
+function switchTab(tab) {
+  const tabs = ['practical','notes','photo','flashcards'];
+  document.querySelectorAll('.app-tab').forEach((t, i) => t.classList.toggle('active', tabs[i] === tab));
+  document.querySelectorAll('.app-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  // Gate photo feature
+  if (tab === 'photo') {
+    document.getElementById('photo-lock-banner').style.display = hasPhotoAccess() ? 'none' : 'block';
+    document.getElementById('photo-feature').style.display = hasPhotoAccess() ? 'block' : 'none';
+  }
+}
+function setBN(id) { document.querySelectorAll('.bn-item').forEach(b => b.classList.remove('active')); document.getElementById(id)?.classList.add('active'); }
+
+// ═══════════════════════════════════════════
+// PAYMENT
+// ═══════════════════════════════════════════
+let curPlan = 'pro';
+const plans = {
+  pro:     { name: 'Pro',         price: 199, gst: 35.82, total: 234.82 },
+  scholar: { name: 'Scholar 📷', price: 349, gst: 62.82, total: 411.82 },
+  group:   { name: 'Study Group', price: 499, gst: 89.82, total: 588.82 }
+};
+function openPayment() {
+  document.getElementById('pay-step1').style.display = 'block';
+  document.getElementById('pay-step2').style.display = 'none';
+  openModal('pay-overlay');
+}
+function openPaymentPlan(plan) { curPlan = plan; selPayPlan(plan); openPayment(); }
+function selPayPlan(plan) {
+  curPlan = plan;
+  document.querySelectorAll('.pay-plan').forEach(p => p.classList.remove('sel'));
+  document.getElementById('pp-' + plan).classList.add('sel');
+  const p = plans[plan];
+  document.getElementById('sum-plan').textContent = p.name;
+  document.getElementById('sum-gst').textContent = '₹' + p.gst.toFixed(2);
+  document.getElementById('sum-total').textContent = '₹' + p.total.toFixed(2);
+}
+function selPM(el) { document.querySelectorAll('.pm-opt').forEach(p => p.classList.remove('sel')); el.classList.add('sel'); }
+
+function initRazorpay() {
+  const p = plans[curPlan];
+  if (RZP_KEY === 'rzp_test_YOUR_KEY_HERE') {
+    const btn = document.querySelector('.rzp-btn');
+    btn.textContent = '⏳ Processing…'; btn.disabled = true;
+    setTimeout(() => {
+      btn.textContent = '🔒 Pay with Razorpay'; btn.disabled = false;
+      document.getElementById('pay-step1').style.display = 'none';
+      document.getElementById('pay-step2').style.display = 'block';
+      document.getElementById('succ-plan').textContent = p.name;
+      userPlan = curPlan; // Update plan state
+    }, 1400);
+    return;
+  }
+  const options = {
+    key: RZP_KEY,
+    amount: Math.round(p.total * 100),
+    currency: "INR",
+    name: "StudyLab",
+    description: p.name + " Plan — Monthly",
+    handler: function(response) {
+      userPlan = curPlan;
+      document.getElementById('pay-step1').style.display = 'none';
+      document.getElementById('pay-step2').style.display = 'block';
+      document.getElementById('succ-plan').textContent = p.name;
+    },
+    prefill: { name: "Student", email: "student@email.com", contact: "9999999999" },
+    notes: { plan: curPlan },
+    theme: { color: curPlan === 'scholar' ? '#C46A20' : '#1A6B4A' }
+  };
+  const rzp = new Razorpay(options);
+  rzp.on('payment.failed', r => alert('Payment failed: ' + r.error.description));
+  rzp.open();
+}
+
+// ═══════════════════════════════════════════
+// PRACTICAL REPORT BUILDER
+// ═══════════════════════════════════════════
+function selFmt(el) { document.querySelectorAll('.fmt-chip').forEach(c => c.classList.remove('sel')); el.classList.add('sel'); }
+let rowN = 3;
+function addRow() {
+  rowN++;
+  const tb = document.getElementById('readings-body');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><input type="text" value="${rowN}" style="width:40px;text-align:center;"/></td><td><input type="number" value="0.00" step="0.05" class="ini"/></td><td><input type="number" value="0.00" step="0.05" class="fin"/></td><td><input type="number" class="vol auto" readonly/></td>`;
+  tb.appendChild(tr); attachListeners();
+}
+function attachListeners() { document.querySelectorAll('.rtbl .ini,.rtbl .fin').forEach(i => i.oninput = updateVols); }
+function updateVols() {
+  document.querySelectorAll('#readings-body tr').forEach(row => {
+    const i = parseFloat(row.querySelector('.ini')?.value) || 0;
+    const f = parseFloat(row.querySelector('.fin')?.value) || 0;
+    const v = row.querySelector('.vol');
+    if (v) v.value = Math.max(0, f - i).toFixed(2);
+  });
+}
+function doCalc() {
+  const vols = [...document.querySelectorAll('.vol')].map(v => parseFloat(v.value)).filter(v => v > 0);
+  if (!vols.length) { alert('Enter readings first.'); return; }
+  const avg = vols.reduce((a, b) => a + b, 0) / vols.length;
+  const cN = parseFloat(document.getElementById('c-naoh').value);
+  const vH = parseFloat(document.getElementById('v-hcl').value);
+  const cH = (cN * avg) / vH;
+  const el = document.getElementById('calc-res');
+  el.style.display = 'block';
+  el.innerHTML = `Avg Vol NaOH = ${avg.toFixed(2)} mL &nbsp;|&nbsp; C(HCl) = (${cN} × ${avg.toFixed(2)}) / ${vH} = <strong>${cH.toFixed(4)} M</strong>`;
+}
+function handleUpload(inp) { document.getElementById('uploaded-files').textContent = '📎 ' + [...inp.files].map(f => f.name).join(', '); }
+
+async function callAI(prompt, imageBase64 = null) {
+  const content = imageBase64
+    ? [{ type: "image", source: { type: "base64", media_type: "image/jpeg", data: imageBase64 } }, { type: "text", text: prompt }]
+    : [{ type: "text", text: prompt }];
+  const res = await fetch(API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1800, messages: [{ role: 'user', content }] })
+  });
+  const data = await res.json();
+  return data.content?.map(b => b.text || '').join('') || '';
+}
+
+async function generateReport() {
+  const btn = document.getElementById('gen-btn');
+  const ld = document.getElementById('loading');
+  const doc = document.getElementById('preview-doc');
+  btn.disabled = true; btn.innerHTML = '✦ Generating…';
+  ld.style.display = 'flex'; doc.innerHTML = '';
+  const title = document.getElementById('exp-title').value;
+  const aim = document.getElementById('exp-aim').value;
+  const mats = document.getElementById('exp-mats').value;
+  const fmt = document.querySelector('.fmt-chip.sel')?.textContent || 'School/College';
+  const readings = [...document.querySelectorAll('#readings-body tr')].map((r, i) =>
+    `Trial ${i+1}: Initial=${r.querySelector('.ini')?.value}mL, Final=${r.querySelector('.fin')?.value}mL, Volume=${r.querySelector('.vol')?.value}mL`);
+  const calcRes = document.getElementById('calc-res').textContent;
+  const prompt = `Write a complete student practical report using ONLY HTML (h2 for headings, p for paragraphs, table/tr/th/td for data). No markdown, no backticks.\n\nFormat: ${fmt}\nTitle: ${title}\nAim: ${aim}\nMaterials: ${mats}\nReadings: ${readings.join(' | ')}\nCalculations: ${calcRes}\n\nSections: Aim, Materials & Apparatus, Theory (2 paragraphs), Procedure (numbered steps), Observations (HTML table), Calculations (full working), Result, Precautions (5 points), Conclusion.`;
+  try {
+    const html = await callAI(prompt);
+    ld.style.display = 'none';
+    doc.innerHTML = html || '<p style="color:red">Error — please try again.</p>';
+  } catch(e) { ld.style.display = 'none'; doc.innerHTML = '<p style="color:red">Network error. Please try again.</p>'; }
+  btn.disabled = false; btn.innerHTML = '✦ Generate Full Report with AI';
+}
+function copyReport() { navigator.clipboard.writeText(document.getElementById('preview-doc').innerText).then(() => alert('Report copied!')); }
+
+// ═══════════════════════════════════════════
+// PHOTO CAPTURE & AI ANALYSIS
+// ═══════════════════════════════════════════
+let capturedImages = []; // { name, base64, preview }
+let analysisType = 'lab-report';
+
+function triggerCamera() { document.getElementById('camera-input').click(); }
+function selAnalysisType(el, type) {
+  document.querySelectorAll('#analysis-type-chips .fmt-chip').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel'); analysisType = type;
+}
+
+function handlePhotoCapture(input, source) {
+  const files = [...input.files];
+  if (!files.length) return;
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const base64 = e.target.result.split(',')[1];
+      const preview = e.target.result;
+      capturedImages.push({ name: file.name || `capture_${Date.now()}.jpg`, base64, preview, source });
+      renderCapturedPhotos();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderCapturedPhotos() {
+  const grid = document.getElementById('photo-preview-grid');
+  const container = document.getElementById('captured-photos');
+  if (!capturedImages.length) { container.style.display = 'none'; return; }
+  container.style.display = 'block';
+  grid.innerHTML = capturedImages.map((img, i) => `
+    <div class="photo-preview">
+      <img src="${img.preview}" alt="${img.name}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'160\\'><rect width=\\'200\\' height=\\'160\\' fill=\\'%23F2F1EC\\'/><text x=\\'50%\\' y=\\'50%\\' text-anchor=\\'middle\\' fill=\\'%237A7A7A\\' font-size=\\'14\\'>Image ${i+1}</text></svg>'"/>
+      <div class="photo-preview-info">
+        <div class="photo-preview-name">${img.name}</div>
+        <button class="photo-analyze-btn" onclick="analyzePhoto(${i})">Analyse this photo</button>
+      </div>
+    </div>`).join('');
+}
+
+async function analyzePhoto(index) {
+  await analyzeWithAI(capturedImages[index]);
+}
+
+async function analyzePhotos() {
+  if (!capturedImages.length) { alert('Please capture or upload at least one image first.'); return; }
+  await analyzeWithAI(capturedImages[0]);
+}
+
+async function analyzeWithAI(img) {
+  document.getElementById('analysis-result').style.display = 'block';
+  document.getElementById('photo-loading').style.display = 'flex';
+  document.getElementById('ar-body').innerHTML = '';
+  document.getElementById('ar-actions').style.display = 'none';
+  const typeLabels = { 'lab-report': 'Lab Report', 'notes': 'Study Notes', 'diagram': 'Diagram / Graph', 'formula': 'Formula Sheet' };
+  document.getElementById('ar-sub').textContent = typeLabels[analysisType] + ' detected';
+  const prompts = {
+    'lab-report': `You are analysing a photo of a student's handwritten or printed lab report. Extract ALL of the following and format with h3 headings and paragraphs (HTML only, no markdown):\n1. Experiment title and aim\n2. All readings/data (present as HTML table)\n3. Any calculations shown (re-do the calculations and verify correctness, flag errors)\n4. Observations and results\n5. Any errors or missing sections detected\n6. Suggestions to improve the report`,
+    'notes': `You are analysing a photo of handwritten student notes. Extract and structure the content using HTML (h3 headings, paragraphs, lists). Provide:\n1. Main topic and subtopics identified\n2. Full transcription / clean version of the notes\n3. 5 key points in bullet list format\n4. Exam tip based on the content`,
+    'diagram': `You are analysing a photo of a scientific diagram or graph from a student's notes. Describe in HTML (h3, p, ul):\n1. Type of diagram/graph identified\n2. What is being shown (axes, labels, trends)\n3. Key observations and conclusions that can be drawn\n4. How this diagram relates to common exam questions`,
+    'formula': `You are analysing a photo of a student formula sheet. Extract in HTML (h3, p, table):\n1. All formulas visible (present each in a table with: formula, variables, units, subject area)\n2. Any formulas that appear incorrect — flag and correct them\n3. Missing important formulas for the same topic`
+  };
+  try {
+    const html = await callAI(prompts[analysisType], img.base64);
+    document.getElementById('photo-loading').style.display = 'none';
+    document.getElementById('ar-body').innerHTML = html || '<p style="color:red">Could not analyse the image. Please try again with a clearer photo.</p>';
+    document.getElementById('ar-actions').style.display = 'flex';
+  } catch(e) {
+    document.getElementById('photo-loading').style.display = 'none';
+    document.getElementById('ar-body').innerHTML = '<p style="color:red">Network error. Please try again.</p>';
+  }
+}
+
+function importToReport() {
+  const analysisText = document.getElementById('ar-body').innerText;
+  document.getElementById('exp-aim').value = 'Extracted from photo analysis — please review and edit';
+  switchTab('practical');
+  alert('Analysis imported to Report Builder. Please review and edit the extracted content before generating.');
+}
+function saveAnalysis() {
+  document.querySelector('.ed-content').value = document.getElementById('ar-body').innerText;
+  switchTab('notes');
+  alert('Analysis saved as a note. You can now edit and summarize it.');
+}
+function resetPhotoCapture() {
+  capturedImages = [];
+  document.getElementById('captured-photos').style.display = 'none';
+  document.getElementById('analysis-result').style.display = 'none';
+  document.getElementById('photo-preview-grid').innerHTML = '';
+}
+
+// ═══════════════════════════════════════════
+// NOTES & SUMMARIZE
+// ═══════════════════════════════════════════
+async function doSummarize() {
+  const content = document.querySelector('.ed-content').value;
+  const title = document.querySelector('.ed-title').value;
+  const body = document.getElementById('ai-panel-body');
+  body.innerHTML = '<p style="color:var(--ink3);font-size:13px;">Summarizing…</p>';
+  const prompt = `Summarize student notes on "${title}". Respond ONLY with JSON (no markdown, no backticks):\n{"summary":"2-3 sentence overview","keyPoints":["p1","p2","p3","p4","p5"],"examTip":"one exam tip"}\n\nNotes:\n${content}`;
+  try {
+    const raw = (await callAI(prompt)).replace(/```json|```/g, '').trim();
+    const p = JSON.parse(raw);
+    body.innerHTML = `<p style="font-size:13px;color:var(--ink);margin-bottom:11px;">${p.summary || ''}</p>
+    <div style="font-size:10px;font-weight:700;letter-spacing:.8px;color:var(--ink3);text-transform:uppercase;margin-bottom:7px;">Key Points</div>
+    ${(p.keyPoints || []).map(pt => `<div class="ai-kp"><div class="ai-kp-dot"></div><div style="font-size:13px;">${pt}</div></div>`).join('')}
+    ${p.examTip ? `<div style="margin-top:10px;padding:9px;background:var(--amber-l);border-radius:var(--rsm);font-size:12px;color:var(--amber);"><strong>Exam tip:</strong> ${p.examTip}</div>` : ''}`;
+  } catch(e) { body.innerHTML = '<p style="color:red;font-size:13px;">Could not summarize. Try again.</p>'; }
+}
+
+// ═══════════════════════════════════════════
+// FLASHCARDS
+// ═══════════════════════════════════════════
+async function genFlashcards() {
+  const content = document.querySelector('.ed-content')?.value || 'Biology: Mitosis and Meiosis';
+  const grid = document.getElementById('fc-grid');
+  grid.innerHTML = '<div style="color:var(--ink3);font-size:14px;padding:.5rem;">Generating flashcards…</div>';
+  const prompt = `Create 6 flashcards from these notes. Respond ONLY with JSON array (no markdown, no backticks):\n[{"subject":"Biology","color":"green","question":"...","answer":"..."},...]\nUse color: green, amber, or red.\n\nNotes:\n${content}`;
+  try {
+    const raw = (await callAI(prompt)).replace(/```json|```/g, '').trim();
+    const cards = JSON.parse(raw);
+    const cm = { green: 'var(--green)', amber: 'var(--amber)', red: 'var(--red)' };
+    grid.innerHTML = cards.map(c => `<div class="fc-card" onclick="this.classList.toggle('revealed')" style="border-top:3px solid ${cm[c.color]||cm.green};"><span class="fc-tag" style="color:${cm[c.color]||cm.green};">${c.subject}</span><div class="fc-q">${c.question}</div><div class="fc-a">${c.answer}</div><span class="fc-hint">Tap to reveal</span></div>`).join('');
+    switchTab('flashcards');
+  } catch(e) { grid.innerHTML = '<p style="color:red;font-size:13px;padding:.5rem;">Error. Please try again.</p>'; }
+}
+
+// ═══════════════════════════════════════════
+// AI SUPPORT CHAT
+// ═══════════════════════════════════════════
+const PAYMENT_KEYWORDS = ['payment', 'refund', 'billing', 'charge', 'invoice', 'subscription cancel', 'money', 'rupee', 'paid', 'razorpay', 'transaction'];
+function isPaymentIssue(msg) { return PAYMENT_KEYWORDS.some(kw => msg.toLowerCase().includes(kw)); }
+
+function toggleSupportChat() {
+  const chat = document.getElementById('support-chat');
+  chat.classList.toggle('open');
+  document.getElementById('support-fab').classList.remove('has-notif');
+}
+
+async function sendSupportMsg() {
+  const input = document.getElementById('sc-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  appendSupportMsg(msg, 'user');
+
+  if (isPaymentIssue(msg)) {
+    appendSupportMsg('💳 For payment, refund, or billing issues, please email <strong>billing@studylab.app</strong> directly. Our team will respond within 24 hours.', 'bot');
+    return;
+  }
+
+  const typing = appendTyping();
+  const systemContext = `You are the helpful, friendly AI support assistant for StudyLab — a student app for AI-generated lab reports, notes, flashcards, and photo analysis. The user is on the ${userPlan} plan.\n\nApp features:\n- Practical Report Builder: enter observations, AI generates full report\n- Notes with AI summarization\n- Flashcard generator\n- Photo Capture & AI Analysis (Scholar and Group plans)\n- 4 pricing tiers: Basic (₹0), Pro (₹199), Scholar (₹349, includes photo AI), Study Group (₹499)\n\nFor ANY payment, refund, or billing issues, always direct the user to billing@studylab.app.\n\nBe concise, helpful, and friendly. Max 3-4 sentences per reply.`;
+  try {
+    const res = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 300, system: systemContext, messages: [{ role: 'user', content: msg }] })
+    });
+    const data = await res.json();
+    const reply = data.content?.map(b => b.text || '').join('') || "I'm having trouble right now. Please try again or email support@studylab.app.";
+    removeTyping(typing);
+    appendSupportMsg(reply, 'bot');
+  } catch(e) {
+    removeTyping(typing);
+    appendSupportMsg("I'm having trouble connecting. Please try again or email support@studylab.app.", 'bot');
+  }
+}
+
+function appendSupportMsg(text, role) {
+  const msgs = document.getElementById('sc-messages');
+  const div = document.createElement('div');
+  div.className = 'sc-msg ' + role;
+  div.innerHTML = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+function appendTyping() {
+  const msgs = document.getElementById('sc-messages');
+  const div = document.createElement('div');
+  div.className = 'sc-msg typing';
+  div.innerHTML = '<span></span><span></span><span></span>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+function removeTyping(el) { el?.remove(); }
+
+// ═══════════════════════════════════════════
+// DASHBOARD ACTIVITY GRID
+// ═══════════════════════════════════════════
+function buildActivityGrid() {
+  const grid = document.getElementById('act-grid');
+  if (!grid) return;
+  const levels = ['', 'al1', 'al2', 'al3', 'al4'];
+  grid.innerHTML = Array.from({length: 28}, (_, i) => {
+    const recent = i > 13;
+    const lvl = recent ? levels[Math.floor(Math.random() * 5)] : levels[Math.floor(Math.random() * 3)];
+    return `<div class="act-cell ${lvl}"></div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════
+// PWA MANIFEST (inline)
+// ═══════════════════════════════════════════
+function injectPWAManifest() {
+  const manifest = {
+    name: "StudyLab — AI Lab Reports",
+    short_name: "StudyLab",
+    description: "AI-powered lab reports, notes, flashcards & photo analysis for students",
+    start_url: "/",
+    display: "standalone",
+    orientation: "portrait",
+    background_color: "#FAFAF7",
+    theme_color: "#1A6B4A",
+    icons: [
+      { src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%231A6B4A'/><text x='50%' y='60%' text-anchor='middle' fill='white' font-size='90' dominant-baseline='middle'>🧪</text></svg>", sizes: "192x192", type: "image/svg+xml" },
+      { src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%231A6B4A'/><text x='50%' y='60%' text-anchor='middle' fill='white' font-size='240' dominant-baseline='middle'>🧪</text></svg>", sizes: "512x512", type: "image/svg+xml" }
+    ],
+    categories: ["education", "productivity"],
+    screenshots: []
+  };
+  const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  document.getElementById('pwa-manifest').href = url;
+}
+
+// ═══════════════════════════════════════════
+// SERVICE WORKER (offline + caching)
+// ═══════════════════════════════════════════
+function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    const swCode = `
+const CACHE = 'studylab-v2.1';
+const STATIC = ['/', '/index.html'];
+self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(STATIC)).catch(() => {})); self.skipWaiting(); });
+self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))); });
+self.addEventListener('fetch', e => {
+  if (e.request.method !== 'GET') return;
+  if (e.request.url.includes('api.anthropic.com') || e.request.url.includes('checkout.razorpay.com')) return;
+  e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+});`;
+    const blob = new Blob([swCode], { type: 'application/javascript' });
+    const url = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(url).catch(() => {});
+  }
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+attachListeners();
+updateVols();
+checkForUpdates();
+injectPWAManifest();
+registerServiceWorker();
+// Show photo lock/unlock based on plan
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('photo-lock-banner').style.display = hasPhotoAccess() ? 'none' : 'block';
+  document.getElementById('photo-feature').style.display = hasPhotoAccess() ? 'block' : 'none';
+});
+</script>
+</body>
+</html>
