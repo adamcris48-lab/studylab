@@ -1459,11 +1459,22 @@ async function callAI(prompt, imageBase64 = null) {
   const content = imageBase64
     ? [{ type: "image", source: { type: "base64", media_type: "image/jpeg", data: imageBase64 } }, { type: "text", text: prompt }]
     : [{ type: "text", text: prompt }];
-  const res = await fetch(API, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1800, messages: [{ role: 'user', content }] })
-  });
+  const res = await fetch("/api/ai", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    model: "claude-sonnet-4-20250514",
+    max_tokens: 1800,
+    messages: [
+      {
+        role: "user",
+        content: content
+      }
+    ]
+  })
+});
   const data = await res.json();
  const output = data?.content?.[0]?.text;
 
