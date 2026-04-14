@@ -1465,7 +1465,14 @@ async function callAI(prompt, imageBase64 = null) {
     body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1800, messages: [{ role: 'user', content }] })
   });
   const data = await res.json();
-  return data.content?.map(b => b.text || '').join('') || '';
+ const output = data?.content?.[0]?.text;
+
+if (!output) {
+  console.error("AI response error:", data);
+  throw new Error("No valid AI response");
+}
+
+return output;
 }
 
 async function generateReport() {
